@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16 · Validation, Tooling &amp; Final Checklist — The Complete HTML Guide</title>
+<meta name="description" content="Validation tools, 15 senior-level best practices, before-you-ship checklist.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">16 · Validation</p>
+  <h1>Validation, Tooling &amp; Final Checklist</h1>
+  <p class="lede">The tools that catch what your eyes miss — and the checklist you should run before you ship.</p>
+
+  <h2 id="validation-tools">Validation tools</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Tools worth wiring into your workflow</caption>
+      <thead><tr><th scope="col">Tool</th><th scope="col">What it catches</th><th scope="col">How to use</th></tr></thead>
+      <tbody>
+        <tr><td>W3C Nu HTML Checker</td><td>Spec violations, invalid nesting, missing required attributes</td><td><code>validator.w3.org/nu/</code></td></tr>
+        <tr><td><code>html-validate</code></td><td>Configurable HTML linting in CI</td><td><code>npx html-validate "**/*.html"</code></td></tr>
+        <tr><td><code>vnu-jar</code></td><td>The Nu validator as a CLI / library</td><td><code>java -jar vnu.jar file.html</code></td></tr>
+        <tr><td>Lighthouse</td><td>Performance, accessibility, SEO, best practices</td><td>DevTools → Lighthouse panel</td></tr>
+        <tr><td>axe DevTools</td><td>Accessibility violations (automated subset)</td><td>Browser extension</td></tr>
+        <tr><td>DevTools Elements panel</td><td>What the parser actually built vs what you wrote</td><td>Right-click → Inspect</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="best-practices">15 senior-level best practices</h2>
+  <ol>
+    <li><strong>Semantic HTML first.</strong> Choose the right element before you choose a class.</li>
+    <li><strong>Validate every page.</strong> The parser tolerates errors; the accessibility tree does not.</li>
+    <li><strong>Progressive enhancement.</strong> The page should work before JS loads.</li>
+    <li><strong>Exactly one <code>h1</code></strong> per page, matching the page's purpose.</li>
+    <li><strong>Always set <code>alt</code>, <code>width</code> and <code>height</code></strong> on images.</li>
+    <li><strong>Every input has a <code>label</code> and a <code>name</code>.</strong> No exceptions.</li>
+    <li><strong>Every button has a <code>type</code>.</strong> <code>type="button"</code> for non-submit actions.</li>
+    <li><strong>Native elements over ARIA.</strong> ARIA fixes gaps; it does not replace semantics.</li>
+    <li><strong>Use <code>&lt;dialog&gt;</code> for modals.</strong> <code>showModal()</code> gives you focus trapping and ESC handling.</li>
+    <li><strong>Don't lazy-load the LCP image.</strong> <code>fetchpriority="high"</code> on the hero.</li>
+    <li><strong>Absolute URLs for SEO metadata.</strong> Open Graph, canonical, and JSON-LD all need absolute URLs.</li>
+    <li><strong><code>rel="noopener"</code> on <code>target="_blank"</code>.</strong> Even when the browser implies it.</li>
+    <li><strong>Set <code>lang</code> on <code>&lt;html&gt;</code>.</strong> Screen readers and translation rely on it.</li>
+    <li><strong>Ship a skip link.</strong> It is the cheapest accessibility win on any page.</li>
+    <li><strong>Treat the outline as a contract.</strong> Your heading tree is the page's table of contents for screen readers and crawlers.</li>
+  </ol>
+
+  <h2 id="shipping-checklist">Before you ship</h2>
+
+  <div class="checklist-group">
+    <h4>Structure</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="s1"><label for="s1"><code>&lt;!DOCTYPE html&gt;</code> and <code>lang</code> on <code>&lt;html&gt;</code>.</label></li>
+      <li><input type="checkbox" id="s2"><label for="s2">One <code>&lt;main&gt;</code>, one <code>h1</code>.</label></li>
+      <li><input type="checkbox" id="s3"><label for="s3">Headings descend without skipping levels.</label></li>
+      <li><input type="checkbox" id="s4"><label for="s4">Header / nav / main / footer landmarks present.</label></li>
+    </ul>
+  </div>
+
+  <div class="checklist-group">
+    <h4>Content</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="c1"><label for="c1">Every image has an <code>alt</code> attribute.</label></li>
+      <li><input type="checkbox" id="c2"><label for="c2">Link text is descriptive (no “click here”).</label></li>
+      <li><input type="checkbox" id="c3"><label for="c3">Dates use <code>&lt;time datetime&gt;</code>.</label></li>
+      <li><input type="checkbox" id="c4"><label for="c4">Abbreviations expanded on first use.</label></li>
+    </ul>
+  </div>
+
+  <div class="checklist-group">
+    <h4>Forms</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="f1"><label for="f1">Every input has a <code>label</code>.</label></li>
+      <li><input type="checkbox" id="f2"><label for="f2">Every input has a <code>name</code>.</label></li>
+      <li><input type="checkbox" id="f3"><label for="f3">Every button has a <code>type</code>.</label></li>
+      <li><input type="checkbox" id="f4"><label for="f4">Errors use <code>aria-invalid</code> + <code>aria-describedby</code> + <code>role="alert"</code>.</label></li>
+      <li><input type="checkbox" id="f5"><label for="f5">Appropriate <code>autocomplete</code> tokens on identity fields.</label></li>
+      <li><input type="checkbox" id="f6"><label for="f6">CSRF token on every state-changing form.</label></li>
+    </ul>
+  </div>
+
+  <div class="checklist-group">
+    <h4>Accessibility</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="a1"><label for="a1">Skip link works.</label></li>
+      <li><input type="checkbox" id="a2"><label for="a2">Focus visible on every interactive element.</label></li>
+      <li><input type="checkbox" id="a3"><label for="a3">All interactive controls are keyboard-reachable.</label></li>
+      <li><input type="checkbox" id="a4"><label for="a4">Contrast ratios pass AA.</label></li>
+      <li><input type="checkbox" id="a5"><label for="a5">Decorative icons marked <code>aria-hidden</code>.</label></li>
+    </ul>
+  </div>
+
+  <div class="checklist-group">
+    <h4>Performance</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="p1"><label for="p1">LCP image preloaded with <code>fetchpriority="high"</code>.</label></li>
+      <li><input type="checkbox" id="p2"><label for="p2">All images have <code>width</code>/<code>height</code>.</label></li>
+      <li><input type="checkbox" id="p3"><label for="p3">Own JS uses <code>defer</code> or <code>type="module"</code>.</label></li>
+      <li><input type="checkbox" id="p4"><label for="p4">Below-fold images use <code>loading="lazy"</code>.</label></li>
+    </ul>
+  </div>
+
+  <div class="checklist-group">
+    <h4>SEO</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="o1"><label for="o1">Unique <code>&lt;title&gt;</code> and meta <code>description</code>.</label></li>
+      <li><input type="checkbox" id="o2"><label for="o2">Canonical URL set.</label></li>
+      <li><input type="checkbox" id="o3"><label for="o3">Open Graph and Twitter meta tags with absolute URLs.</label></li>
+      <li><input type="checkbox" id="o4"><label for="o4">JSON-LD validated with Rich Results Test.</label></li>
+    </ul>
+  </div>
+
+  <div class="checklist-group">
+    <h4>Validation</h4>
+    <ul class="checklist">
+      <li><input type="checkbox" id="v1"><label for="v1">W3C Nu validator reports zero errors.</label></li>
+      <li><input type="checkbox" id="v2"><label for="v2">Lighthouse accessibility ≥ 95.</label></li>
+      <li><input type="checkbox" id="v3"><label for="v3">No console errors in DevTools.</label></li>
+      <li><input type="checkbox" id="v4"><label for="v4">Print stylesheet checked.</label></li>
+    </ul>
+  </div>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="15-advanced.html"><span class="pn-label">Previous</span><span class="pn-title">15 · Advanced Topics</span></a>
+    <a class="page-next" href="appendix.html"><span class="pn-label">Next</span><span class="pn-title">Appendix · Quick Gotchas</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

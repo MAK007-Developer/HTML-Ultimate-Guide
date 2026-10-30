@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>05 · Images &amp; Responsive Images — The Complete HTML Guide</title>
+<meta name="description" content="Basics, alt text rules, srcset with w and x descriptors, picture, figure/figcaption, loading strategy.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">05 · Images</p>
+  <h1>Images &amp; Responsive Images</h1>
+  <p class="lede">alt text rules, width/height, srcset, sizes, picture, figures, and the loading strategy that keeps Core Web Vitals green.</p>
+
+  <h2 id="image-basics">Basics</h2>
+  <pre><code>&lt;img src="/img/cat.jpg"
+     alt="A tabby cat asleep on a laptop keyboard"
+     width="800"
+     height="600"
+     loading="lazy"
+     decoding="async"&gt;</code></pre>
+  <ul>
+    <li><strong><code>width</code> + <code>height</code></strong> are mandatory in practice: the browser reserves the correct aspect ratio before the image loads, which eliminates layout shift (CLS).</li>
+    <li><strong><code>loading="lazy"</code></strong> defers off-screen images. Never use it on the LCP hero.</li>
+    <li><strong><code>decoding="async"</code></strong> lets the browser decode off the main thread.</li>
+    <li><strong><code>alt</code></strong> is required — even if it's <code>alt=""</code>.</li>
+  </ul>
+
+  <h2 id="alt-rules">alt text rules</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Choosing the right alt text</caption>
+      <thead><tr><th scope="col">Situation</th><th scope="col">alt value</th><th scope="col">Example</th></tr></thead>
+      <tbody>
+        <tr><td>Informative image</td><td>Describe the information, concisely</td><td><code>alt="Revenue grew 24% from 2024 to 2025"</code></td></tr>
+        <tr><td>Purely decorative</td><td>Empty string (still required!)</td><td><code>alt=""</code></td></tr>
+        <tr><td>Image inside a link</td><td>Describe the destination, not the picture</td><td><code>&lt;a href="/"&gt;&lt;img src="logo.svg" alt="Acme home"&gt;&lt;/a&gt;</code></td></tr>
+        <tr><td>Image with a visible caption</td><td>Describe the image; do not repeat the caption</td><td><code>alt="The 2026 product line"</code> + <code>&lt;figcaption&gt;Figure 1: Product line&lt;/figcaption&gt;</code></td></tr>
+        <tr><td>Complex chart or diagram</td><td>Short alt + a long description elsewhere</td><td><code>alt="Sales by region, 2026"</code> + link to a data table</td></tr>
+        <tr><td>Text rendered as an image</td><td>Use the exact text — or better, don't</td><td><code>alt="50% off"</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="srcset-w">srcset + sizes with w descriptors</h2>
+  <pre><code>&lt;img src="/img/hero-800.jpg"
+     srcset="/img/hero-400.jpg   400w,
+             /img/hero-800.jpg   800w,
+             /img/hero-1200.jpg 1200w,
+             /img/hero-1600.jpg 1600w"
+     sizes="(min-width: 900px) 800px, 100vw"
+     width="800" height="600"
+     alt="Sunrise over the mountains"
+     fetchpriority="high"&gt;
+
+&lt;!-- sizes tells the browser how wide the image will be RENDERED at
+     each breakpoint. It multiplies by device pixel ratio to choose
+     the best candidate. Without sizes, it assumes 100vw. --&gt;</code></pre>
+
+  <h2 id="srcset-x">srcset with x descriptors</h2>
+  <pre><code>&lt;!-- Fixed-size images (logos, icons) where you only care about DPR --&gt;
+&lt;img src="/img/logo.png"
+     srcset="/img/logo.png 1x, /img/logo@2x.png 2x, /img/logo@3x.png 3x"
+     width="120" height="40"
+     alt="Acme"&gt;</code></pre>
+
+  <h2 id="picture">picture for art direction and format negotiation</h2>
+  <pre><code>&lt;picture&gt;
+  &lt;!-- Modern formats first; the browser picks the first it supports --&gt;
+  &lt;source type="image/avif" srcset="/img/hero.avif 1x, /img/hero@2x.avif 2x"&gt;
+  &lt;source type="image/webp" srcset="/img/hero.webp 1x, /img/hero@2x.webp 2x"&gt;
+
+  &lt;!-- Art direction: a different crop on wide screens --&gt;
+  &lt;source media="(min-width: 900px)" srcset="/img/hero-wide.jpg"&gt;
+  &lt;source media="(min-width: 480px)" srcset="/img/hero-square.jpg"&gt;
+
+  &lt;!-- Mandatory fallback — and the only element that carries alt --&gt;
+  &lt;img src="/img/hero-narrow.jpg" width="800" height="600"
+       alt="Sunrise over the mountains"&gt;
+&lt;/picture&gt;</code></pre>
+  <div class="callout tip">
+    <span class="ico" aria-hidden="true">✔</span>
+    <p>Use <code>&lt;picture&gt;</code> when you need <em>different crops or formats</em>. Use <code>srcset</code> + <code>sizes</code> when you need <em>the same image at different resolutions</em>.</p>
+  </div>
+
+  <h2 id="figure">figure / figcaption</h2>
+  <pre><code>&lt;figure&gt;
+  &lt;img src="/img/revenue.png"
+       alt="Bar chart: revenue rose 24% from 2024 to 2025."
+       width="640" height="400"&gt;
+  &lt;figcaption&gt;Figure 1. Annual revenue, 2024–2025.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;!-- &lt;figure&gt; isn't only for images: code, tables, quotes all work --&gt;
+&lt;figure&gt;
+  &lt;pre&gt;&lt;code&gt;npm install&lt;/code&gt;&lt;/pre&gt;
+  &lt;figcaption&gt;Installing the package.&lt;/figcaption&gt;
+&lt;/figure&gt;</code></pre>
+
+  <h2 id="loading-strategy">Loading strategy</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Choosing loading, fetchpriority and decoding</caption>
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Value</th><th scope="col">Use for</th><th scope="col">Avoid</th></tr></thead>
+      <tbody>
+        <tr><td><code>loading</code></td><td><code>lazy</code></td><td>Below-the-fold images</td><td>The LCP hero image</td></tr>
+        <tr><td><code>loading</code></td><td><code>eager</code></td><td>The hero / above-the-fold images</td><td>Long lists of thumbnails</td></tr>
+        <tr><td><code>fetchpriority</code></td><td><code>high</code></td><td>The single LCP image</td><td>Many images at once</td></tr>
+        <tr><td><code>fetchpriority</code></td><td><code>low</code></td><td>Decorative or below-fold art</td><td>The hero</td></tr>
+        <tr><td><code>decoding</code></td><td><code>async</code></td><td>Most images</td><td>Images that must be pixel-perfect at first paint</td></tr>
+        <tr><td><code>decoding</code></td><td><code>sync</code></td><td>Rarely — blocks rendering</td><td>Anything large</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout danger">
+    <span class="ico" aria-hidden="true">✕</span>
+    <p><strong>Never lazy-load the LCP hero image.</strong> <code>loading="lazy"</code> delays the request until layout is known, which can add hundreds of milliseconds to Largest Contentful Paint. The hero should be <code>loading="eager"</code> (the default) with <code>fetchpriority="high"</code>, and ideally preloaded.</p>
+  </div>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="04-links.html"><span class="pn-label">Previous</span><span class="pn-title">04 · Links &amp; Navigation</span></a>
+    <a class="page-next" href="06-media.html"><span class="pn-label">Next</span><span class="pn-title">06 · Media</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

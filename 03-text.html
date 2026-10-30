@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03 · Text Content — The Complete HTML Guide</title>
+<meta name="description" content="Headings, paragraphs, inline semantics, quotes, definition lists, time, ruby, bidirectional text.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">03 · Text</p>
+  <h1>Text Content</h1>
+  <p class="lede">Headings, paragraphs, inline semantics, quotations, definition lists, dates, ruby and bidirectional text.</p>
+
+  <h2 id="headings">Headings</h2>
+  <pre><code>&lt;h1&gt;Page title (exactly one per page)&lt;/h1&gt;
+
+&lt;h2&gt;Major section&lt;/h2&gt;
+&lt;h3&gt;Subsection&lt;/h3&gt;
+&lt;h4&gt;Sub-subsection — never skip from h2 to h4&lt;/h4&gt;
+
+&lt;!-- hgroup groups a heading with its subtitle / tagline --&gt;
+&lt;hgroup&gt;
+  &lt;h2&gt;Acme Rocket 3000&lt;/h2&gt;
+  &lt;p&gt;The fastest way to leave the atmosphere&lt;/p&gt;
+&lt;/hgroup&gt;</code></pre>
+  <ul>
+    <li><strong>One <code>h1</code> per page</strong>, matching the page's purpose (not necessarily the site name).</li>
+    <li><strong>Never skip levels</strong> — a jump from <code>h2</code> to <code>h4</code> breaks screen-reader navigation.</li>
+    <li><strong>Never choose a heading level for its size.</strong> Style it with CSS instead.</li>
+    <li>The old <em>document outline algorithm</em> (where nested <code>section</code>s generated implicit heading levels) was <strong>removed</strong> from browsers. Heading levels are now literally the numbers you write.</li>
+  </ul>
+
+  <h2 id="paragraphs-breaks">Paragraphs, <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code></h2>
+  <pre><code>&lt;p&gt;A paragraph is a run of text with a single theme.&lt;/p&gt;
+
+&lt;!-- &lt;br&gt; is a *line break within* one piece of content: --&gt;
+&lt;p&gt;
+  221B Baker Street&lt;br&gt;
+  London NW1 6XE&lt;br&gt;
+  United Kingdom
+&lt;/p&gt;
+
+&lt;!-- &lt;br&gt; is NOT for spacing between paragraphs. Use margins. --&gt;
+
+&lt;!-- &lt;hr&gt; is a thematic break (a scene change), not a decorative line --&gt;
+&lt;p&gt;Three years passed.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;She returned on a Tuesday.&lt;/p&gt;</code></pre>
+
+  <h2 id="emphasis">Emphasis / importance</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Inline text semantics and their screen-reader impact</caption>
+      <thead><tr><th scope="col">Element</th><th scope="col">Meaning</th><th scope="col">Screen-reader impact</th><th scope="col">Use when…</th></tr></thead>
+      <tbody>
+        <tr><td><code>strong</code></td><td>Strong importance, seriousness, urgency</td><td>Often announced with emphasis</td><td>The content is genuinely important.</td></tr>
+        <tr><td><code>b</code></td><td>Stylistically offset, no extra importance</td><td>None</td><td>Keywords in a summary, product names.</td></tr>
+        <tr><td><code>em</code></td><td>Stress emphasis — changes sentence meaning</td><td>Often announced with emphasis</td><td>“I <em>said</em> that” vs “I said <em>that</em>”.</td></tr>
+        <tr><td><code>i</code></td><td>Alternate voice, technical term, idiomatic phrase</td><td>None</td><td>Taxonomy names, foreign words, thoughts.</td></tr>
+        <tr><td><code>mark</code></td><td>Marked for reference in a different context</td><td>Frequently announced as “highlighted”</td><td>Search-result highlighting.</td></tr>
+        <tr><td><code>small</code></td><td>Side comment, fine print, legal text</td><td>None</td><td>Terms and conditions, copyright lines.</td></tr>
+        <tr><td><code>s</code></td><td>No longer accurate or relevant</td><td>None</td><td>“Was $49” — a struck-through old price.</td></tr>
+        <tr><td><code>del</code></td><td>Removed from the document</td><td>Some readers announce “deleted”</td><td>Tracked edits, changelogs.</td></tr>
+        <tr><td><code>ins</code></td><td>Added to the document</td><td>Some readers announce “inserted”</td><td>Tracked edits, changelogs.</td></tr>
+        <tr><td><code>u</code></td><td>Unarticulated annotation (e.g. a spelling error)</td><td>None</td><td>Rarely — it looks like a link. Avoid.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <pre><code>&lt;p&gt;&lt;strong&gt;Warning:&lt;/strong&gt; this action cannot be undone.&lt;/p&gt;
+&lt;p&gt;I never said &lt;em&gt;that&lt;/em&gt; — I said &lt;em&gt;this&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Search results for "&lt;mark&gt;html&lt;/mark&gt; guide".&lt;/p&gt;
+&lt;p&gt;&lt;s&gt;$49.00&lt;/s&gt; &lt;strong&gt;$29.00&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;small&gt;Prices exclude VAT.&lt;/small&gt;&lt;/p&gt;
+&lt;p&gt;&lt;del datetime="2026-10-01"&gt;Old sentence.&lt;/del&gt; &lt;ins datetime="2026-10-30"&gt;New sentence.&lt;/ins&gt;&lt;/p&gt;</code></pre>
+
+  <h2 id="quotes-code">blockquote, q, pre/code, kbd, samp, var</h2>
+  <pre><code>&lt;blockquote cite="https://example.com/source"&gt;
+  &lt;p&gt;Programs must be written for people to read, and only
+     incidentally for machines to execute.&lt;/p&gt;
+  &lt;footer&gt;— &lt;cite&gt;SICP&lt;/cite&gt;&lt;/footer&gt;
+&lt;/blockquote&gt;
+
+&lt;!-- &lt;q&gt; is for short inline quotations; browsers add the quotes --&gt;
+&lt;p&gt;She said &lt;q cite="https://example.com"&gt;ship it&lt;/q&gt; and left.&lt;/p&gt;
+
+&lt;!-- Preformatted, whitespace-preserving block of code --&gt;
+&lt;pre&gt;&lt;code&gt;const greet = (name) =&amp;gt; `Hello, ${name}`;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;!-- Keyboard input --&gt;
+&lt;p&gt;Press &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;C&lt;/kbd&gt; to copy.&lt;/p&gt;
+
+&lt;!-- Program output --&gt;
+&lt;p&gt;The compiler said &lt;samp&gt;error: expected ';'&lt;/samp&gt;.&lt;/p&gt;
+
+&lt;!-- Mathematical / programming variables --&gt;
+&lt;p&gt;Where &lt;var&gt;n&lt;/var&gt; is the number of items.&lt;/p&gt;</code></pre>
+
+  <h2 id="definition-lists">Definition lists</h2>
+  <pre><code>&lt;dl&gt;
+  &lt;dt&gt;HTML&lt;/dt&gt;
+  &lt;dd&gt;HyperText Markup Language — the structure of a document.&lt;/dd&gt;
+
+  &lt;dt&gt;CSS&lt;/dt&gt;
+  &lt;dd&gt;Cascading Style Sheets — the presentation of a document.&lt;/dd&gt;
+
+  &lt;!-- Multiple terms can share one definition --&gt;
+  &lt;dt&gt;JS&lt;/dt&gt;
+  &lt;dt&gt;JavaScript&lt;/dt&gt;
+  &lt;dd&gt;The behaviour of a document.&lt;/dd&gt;
+
+  &lt;!-- Group with a wrapping div when pairs belong together --&gt;
+  &lt;div&gt;
+    &lt;dt&gt;HTTP&lt;/dt&gt;
+    &lt;dd&gt;The transfer protocol.&lt;/dd&gt;
+  &lt;/div&gt;
+&lt;/dl&gt;</code></pre>
+
+  <h2 id="time">The <code>&lt;time&gt;</code> element</h2>
+  <pre><code>&lt;!-- Machine-readable date --&gt;
+&lt;time datetime="2026-10-30"&gt;30 October 2026&lt;/time&gt;
+
+&lt;!-- Date + time + timezone --&gt;
+&lt;time datetime="2026-10-30T14:00Z"&gt;2pm UTC on 30 October&lt;/time&gt;
+
+&lt;!-- Time of day --&gt;
+&lt;time datetime="09:30"&gt;half past nine&lt;/time&gt;
+
+&lt;!-- Duration --&gt;
+&lt;time datetime="PT2H30M"&gt;2 hours 30 minutes&lt;/time&gt;
+
+&lt;!-- Publication / modification timestamps --&gt;
+&lt;article&gt;
+  &lt;header&gt;
+    &lt;h2&gt;Release notes&lt;/h2&gt;
+    &lt;p&gt;Published &lt;time datetime="2026-10-30"&gt;30 Oct 2026&lt;/time&gt;&lt;/p&gt;
+  &lt;/header&gt;
+&lt;/article&gt;</code></pre>
+
+  <h2 id="sup-sub-abbr">sup, sub, abbr</h2>
+  <pre><code>&lt;p&gt;E = mc&lt;sup&gt;2&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Water is H&lt;sub&gt;2&lt;/sub&gt;O&lt;/p&gt;
+
+&lt;!-- First use of an abbreviation: expand it in the title --&gt;
+&lt;p&gt;&lt;abbr title="Cascading Style Sheets"&gt;CSS&lt;/abbr&gt; controls presentation.&lt;/p&gt;
+&lt;p&gt;Then just use CSS for the rest of the page.&lt;/p&gt;</code></pre>
+
+  <h2 id="ruby">Ruby</h2>
+  <pre><code>&lt;!-- Ruby annotations for East Asian pronunciation.
+     &lt;rp&gt; provides fallback parentheses for browsers without ruby. --&gt;
+&lt;ruby&gt;
+  漢 &lt;rp&gt;(&lt;/rp&gt;&lt;rt&gt;kan&lt;/rt&gt;&lt;rp&gt;)&lt;/rp&gt;
+  字 &lt;rp&gt;(&lt;/rp&gt;&lt;rt&gt;ji&lt;/rt&gt;&lt;rp&gt;)&lt;/rp&gt;
+&lt;/ruby&gt;
+
+&lt;!-- For complex annotations use nested rtc --&gt;
+&lt;ruby&gt;
+  漢字
+  &lt;rtc&gt;&lt;rt&gt;かんじ&lt;/rt&gt;&lt;/rtc&gt;
+  &lt;rtc&gt;&lt;rt&gt;kanji&lt;/rt&gt;&lt;/rtc&gt;
+&lt;/ruby&gt;</code></pre>
+
+  <h2 id="bidi">Bidirectional text</h2>
+  <pre><code>&lt;!-- Direction on the whole document or a block --&gt;
+&lt;html lang="ar" dir="rtl"&gt; … &lt;/html&gt;
+
+&lt;p dir="rtl" lang="ar"&gt;مرحبا بالعالم&lt;/p&gt;
+&lt;p dir="ltr" lang="en"&gt;Hello world&lt;/p&gt;
+
+&lt;!-- &lt;bdi&gt; isolates a user-supplied name so it can't scramble
+     the surrounding punctuation. Essential for mixed-direction UIs. --&gt;
+&lt;p&gt;User &lt;bdi&gt;إيان&lt;/bdi&gt; left a comment.&lt;/p&gt;
+
+&lt;!-- &lt;bdo&gt; forces a direction override --&gt;
+&lt;p&gt;&lt;bdo dir="rtl"&gt;forced direction&lt;/bdo&gt;&lt;/p&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="02-structure.html"><span class="pn-label">Previous</span><span class="pn-title">02 · Document Structure &amp; Metadata</span></a>
+    <a class="page-next" href="04-links.html"><span class="pn-label">Next</span><span class="pn-title">04 · Links &amp; Navigation</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

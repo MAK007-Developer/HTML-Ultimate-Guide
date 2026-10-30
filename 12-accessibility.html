@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>12 · Accessibility &amp; ARIA — The Complete HTML Guide</title>
+<meta name="description" content="First rule of ARIA, landmarks, accessible names priority, ARIA states, live regions, focus management, checklist.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">12 · Accessibility</p>
+  <h1>Accessibility &amp; ARIA</h1>
+  <p class="lede">Native semantics first, ARIA second, and never the other way around.</p>
+
+  <h2 id="first-rule-aria">First rule of ARIA</h2>
+  <blockquote>
+    <p>If you can use a native HTML element or attribute with the semantics and behaviour you require already built in, instead of re-purposing an element and adding an ARIA role, state or property to make it accessible, then do so.</p>
+    <footer>— W3C, <cite>ARIA in HTML</cite></footer>
+  </blockquote>
+  <pre><code>&lt;!-- ❌ ARIA-ified div instead of a native button --&gt;
+&lt;div role="button" tabindex="0" onclick="submit()"&gt;Save&lt;/div&gt;
+
+&lt;!-- ✅ Native button — keyboard, focus, Enter/Space, disabled
+     state, form submission, and screen-reader announcement
+     all handled by the browser. --&gt;
+&lt;button type="submit"&gt;Save&lt;/button&gt;</code></pre>
+
+  <h2 id="landmarks-structure">Landmarks and structure</h2>
+  <ul>
+    <li><code>header</code>, <code>nav</code>, <code>main</code>, <code>aside</code>, <code>footer</code>, <code>form</code>, <code>search</code> create landmarks.</li>
+    <li>Every page should have exactly one <code>main</code>.</li>
+    <li>Multiple landmarks of the same type need distinct <code>aria-label</code>s.</li>
+    <li>Landmarks are the primary way a screen-reader user skims a page — get them right before anything else.</li>
+  </ul>
+
+  <h2 id="accessible-names">Accessible names priority</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>How an element's accessible name is computed (highest priority first)</caption>
+      <thead><tr><th scope="col">Priority</th><th scope="col">Source</th><th scope="col">Example</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>aria-labelledby</code></td><td><code>aria-labelledby="heading-id"</code></td></tr>
+        <tr><td>2</td><td><code>aria-label</code></td><td><code>aria-label="Close dialog"</code></td></tr>
+        <tr><td>3</td><td>Native label association</td><td><code>&lt;label for&gt;</code>, <code>&lt;legend&gt;</code>, <code>alt</code>, <code>&lt;caption&gt;</code></td></tr>
+        <tr><td>4</td><td>Element content</td><td>Text inside a <code>&lt;button&gt;</code></td></tr>
+        <tr><td>5</td><td><code>title</code></td><td>Last-resort tooltip text</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn">
+    <span class="ico" aria-hidden="true">!</span>
+    <p>Never rely on <code>title</code> alone — it is invisible to touch users and often truncated. Use <code>aria-label</code> or visible text.</p>
+  </div>
+
+  <h2 id="aria-states">ARIA states &amp; properties</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>The states you will actually use</caption>
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Purpose</th><th scope="col">Common on</th></tr></thead>
+      <tbody>
+        <tr><td><code>aria-expanded</code></td><td>Disclosure open/closed</td><td><code>button</code>, <code>summary</code>-trigger</td></tr>
+        <tr><td><code>aria-controls</code></td><td>ID of the element this control affects</td><td>Disclosure trigger, tab, combobox</td></tr>
+        <tr><td><code>aria-current</code></td><td>Current item in a set (<code>page</code>, <code>step</code>, <code>date</code>)</td><td>Nav links, breadcrumbs</td></tr>
+        <tr><td><code>aria-pressed</code></td><td>Toggle button state</td><td>Formatting toggles, filters</td></tr>
+        <tr><td><code>aria-selected</code></td><td>Selection in a set of options</td><td>Tabs, listbox options, grid cells</td></tr>
+        <tr><td><code>aria-checked</code></td><td>Checkbox state (<code>true</code>, <code>false</code>, <code>mixed</code>)</td><td>Custom checkboxes, tree items</td></tr>
+        <tr><td><code>aria-hidden</code></td><td>Hidden from AT</td><td>Decorative icons</td></tr>
+        <tr><td><code>aria-live</code></td><td>Live region politeness (<code>polite</code> / <code>assertive</code>)</td><td>Status messages, toasts</td></tr>
+        <tr><td><code>aria-invalid</code></td><td>Field has a validation error</td><td>Form inputs</td></tr>
+        <tr><td><code>aria-describedby</code></td><td>ID(s) of descriptive text</td><td>Inputs with hints and errors</td></tr>
+        <tr><td><code>aria-busy</code></td><td>Region is updating</td><td>Async content containers</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="live-regions">Live regions</h2>
+  <pre><code>&lt;!-- The region must exist in the DOM BEFORE you inject text. --&gt;
+&lt;div id="status" aria-live="polite" aria-atomic="true"&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  document.getElementById("status").textContent =
+    "Changes saved.";
+&lt;/script&gt;
+
+&lt;!-- polite: announced at the next pause (most messages).
+     assertive: interrupts the user immediately (errors, alerts).
+     role="alert" is shorthand for aria-live="assertive". --&gt;</code></pre>
+
+  <h2 id="focus-management">Focus management</h2>
+  <ul>
+    <li><strong>Never remove focus outlines.</strong> Style them, but keep them visible.</li>
+    <li><strong>Use <code>:focus-visible</code></strong> to show the outline only for keyboard users.</li>
+    <li><strong>After closing a modal, return focus</strong> to the element that opened it.</li>
+    <li><strong><code>tabindex="-1"</code></strong> makes an element programmatically focusable without adding it to the tab order.</li>
+  </ul>
+  <pre><code>&lt;style&gt;
+  /* Never do this: */
+  /* * { outline: none; } */
+
+  /* Do this instead: */
+  :focus-visible {
+    outline: 2px solid #0969da;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+&lt;/style&gt;
+
+&lt;main id="main" tabindex="-1"&gt; … &lt;/main&gt;</code></pre>
+
+  <h2 id="semantic-checklist">Semantic checklist</h2>
+  <ul class="checklist">
+    <li><input type="checkbox" id="a1"><label for="a1">Every interactive control is a native <code>button</code>, <code>a</code>, or form element.</label></li>
+    <li><input type="checkbox" id="a2"><label for="a2">Every image has an <code>alt</code> attribute (empty for decorative).</label></li>
+    <li><input type="checkbox" id="a3"><label for="a3">Every form input has a programmatic label.</label></li>
+    <li><input type="checkbox" id="a4"><label for="a4">Headings descend in order without skipping levels.</label></li>
+    <li><input type="checkbox" id="a5"><label for="a5">Exactly one <code>main</code> landmark, with a skip link pointing to it.</label></li>
+    <li><input type="checkbox" id="a6"><label for="a6">Focus is visible at all times for keyboard users.</label></li>
+    <li><input type="checkbox" id="a7"><label for="a7">Errors and status changes are announced via live regions.</label></li>
+    <li><input type="checkbox" id="a8"><label for="a8">ARIA is used only when no native element exists.</label></li>
+  </ul>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="11-global-attributes.html"><span class="pn-label">Previous</span><span class="pn-title">11 · Global Attributes</span></a>
+    <a class="page-next" href="13-seo.html"><span class="pn-label">Next</span><span class="pn-title">13 · SEO, Social &amp; Structured Data</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

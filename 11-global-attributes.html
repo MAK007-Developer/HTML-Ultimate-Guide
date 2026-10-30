@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>11 · Global Attributes — The Complete HTML Guide</title>
+<meta name="description" content="Full table of global attributes, data-* and the dataset API, hidden vs inert.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">11 · Global Attributes</p>
+  <h1>Global Attributes</h1>
+  <p class="lede">Attributes available on every element — plus the custom-data escape hatch and the hidden/inert comparison.</p>
+
+  <h2 id="global-table">Full table</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Global attributes</caption>
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Purpose</th><th scope="col">Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>Unique identifier within the document</td><td>Must be unique; used by labels, aria, fragments.</td></tr>
+        <tr><td><code>class</code></td><td>Space-separated list of classes</td><td>No semantics; purely a styling/JS hook.</td></tr>
+        <tr><td><code>style</code></td><td>Inline CSS declarations</td><td>Prefer stylesheets; avoid for maintainability.</td></tr>
+        <tr><td><code>title</code></td><td>Advisory information (tooltip)</td><td>Not a substitute for accessible names.</td></tr>
+        <tr><td><code>lang</code></td><td>Content language (BCP 47 tag)</td><td>Inherits; override for foreign-language passages.</td></tr>
+        <tr><td><code>dir</code></td><td>Text direction: <code>ltr</code> / <code>rtl</code> / <code>auto</code></td><td>Set on <code>&lt;html&gt;</code> for whole-page RTL.</td></tr>
+        <tr><td><code>hidden</code></td><td>Hidden from rendering and AT</td><td>Different from <code>inert</code> — see below.</td></tr>
+        <tr><td><code>inert</code></td><td>Non-interactive, unfocusable, invisible to AT</td><td>Great for offscreen drawers and modal backdrops.</td></tr>
+        <tr><td><code>tabindex</code></td><td>Focus order; <code>-1</code> = programmatic only</td><td>Avoid positive values; they break tab order.</td></tr>
+        <tr><td><code>contenteditable</code></td><td>Makes the element editable</td><td>Rarely the right answer; build a real editor.</td></tr>
+        <tr><td><code>draggable</code></td><td>Whether the element can be dragged</td><td>Must be paired with dragstart/dragover handlers.</td></tr>
+        <tr><td><code>spellcheck</code></td><td>Toggle spell checking</td><td><code>true</code> / <code>false</code></td></tr>
+        <tr><td><code>translate</code></td><td>Whether to translate the content</td><td>Use <code>translate="no"</code> on brand names.</td></tr>
+        <tr><td><code>autofocus</code></td><td>Focus the element on page load</td><td>One per page; can steal focus from AT users.</td></tr>
+        <tr><td><code>accesskey</code></td><td>Keyboard shortcut hint</td><td>Poorly supported; avoid in public UIs.</td></tr>
+        <tr><td><code>data-*</code></td><td>Custom data attributes</td><td>Exposed via <code>element.dataset</code>.</td></tr>
+        <tr><td><code>slot</code></td><td>Assigns a child to a named slot</td><td>Used inside shadow DOM.</td></tr>
+        <tr><td><code>part</code></td><td>Exposes a shadow-DOM element to ::part()</td><td>Style from the outside without piercing.</td></tr>
+        <tr><td><code>nonce</code></td><td>CSP nonce for inline scripts/styles</td><td>Must match the server's CSP nonce.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="data-attributes">data-* attributes</h2>
+  <pre><code>&lt;button data-action="delete" data-id="42" data-confirm&gt;Delete&lt;/button&gt;
+
+&lt;script&gt;
+  const btn = document.querySelector("[data-action='delete']");
+  console.log(btn.dataset.action);   // "delete"
+  console.log(btn.dataset.id);       // "42"
+  console.log(btn.dataset.confirm);  // "" (present but empty)
+  btn.dataset.confirm = "true";      // sets data-confirm="true"
+  delete btn.dataset.confirm;        // removes the attribute
+&lt;/script&gt;
+
+&lt;!-- Naming rules: data-* must be lowercase, hyphens allowed.
+     dataset converts kebab-case to camelCase:
+       data-user-id  →  dataset.userId
+     Never put sensitive data here: it is visible in the DOM. --&gt;</code></pre>
+
+  <h2 id="hidden-inert">hidden vs inert vs display:none</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Removing content from the page</caption>
+      <thead><tr><th scope="col">Mechanism</th><th scope="col">Visible?</th><th scope="col">Focusable?</th><th scope="col">In accessibility tree?</th><th scope="col">Space reserved?</th></tr></thead>
+      <tbody>
+        <tr><td><code>hidden</code></td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td><code>inert</code></td><td>Yes (unless also hidden)</td><td>No</td><td>No (subtree)</td><td>Yes</td></tr>
+        <tr><td><code>display:none</code></td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+        <tr><td><code>visibility:hidden</code></td><td>No</td><td>No</td><td>No</td><td>Yes</td></tr>
+        <tr><td><code>aria-hidden="true"</code></td><td>Yes</td><td>Yes</td><td>No</td><td>Yes</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout tip">
+    <span class="ico" aria-hidden="true">✔</span>
+    <p>Use <code>inert</code> on the rest of the page while a modal is open. Use <code>hidden</code> for content that shouldn't exist on the page. Use <code>display:none</code> via CSS when you want it styled by CSS but removed from layout.</p>
+  </div>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="10-interactive.html"><span class="pn-label">Previous</span><span class="pn-title">10 · Interactive &amp; Disclosure Elements</span></a>
+    <a class="page-next" href="12-accessibility.html"><span class="pn-label">Next</span><span class="pn-title">12 · Accessibility &amp; ARIA</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

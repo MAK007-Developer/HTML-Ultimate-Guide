@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>07 · Lists &amp; Tables — The Complete HTML Guide</title>
+<meta name="description" content="ul, ol, menu, full table anatomy, complex headers, why layout tables must die.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">07 · Lists &amp; Tables</p>
+  <h1>Lists &amp; Tables</h1>
+  <p class="lede">Ordered, unordered and menu lists; full table anatomy; complex headers — and why layout tables must die.</p>
+
+  <h2 id="lists">ul, ol, menu</h2>
+  <pre><code>&lt;ul&gt;
+  &lt;li&gt;Unordered item&lt;/li&gt;
+  &lt;li&gt;Another item
+    &lt;ul&gt;&lt;li&gt;Nested item&lt;/li&gt;&lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- ol attributes --&gt;
+&lt;ol start="3"&gt;               &lt;!-- begin at 3 --&gt;
+  &lt;li&gt;Third&lt;/li&gt;
+  &lt;li&gt;Fourth&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ol reversed&gt;                &lt;!-- count down --&gt;
+  &lt;li&gt;Bronze&lt;/li&gt;
+  &lt;li&gt;Silver&lt;/li&gt;
+  &lt;li&gt;Gold&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ol type="a"&gt;                &lt;!-- a, A, i, I, 1 --&gt;
+  &lt;li&gt;Alpha&lt;/li&gt;
+  &lt;li&gt;Beta&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;li value="10"&gt;Ten&lt;/li&gt;     &lt;!-- force a single item's number --&gt;
+
+&lt;!-- &lt;menu&gt; is a semantic synonym for &lt;ul&gt; used for toolbars / command lists --&gt;
+&lt;menu&gt;
+  &lt;li&gt;&lt;button type="button"&gt;Bold&lt;/button&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;button type="button"&gt;Italic&lt;/button&gt;&lt;/li&gt;
+&lt;/menu&gt;</code></pre>
+  <div class="callout warn">
+    <span class="ico" aria-hidden="true">!</span>
+    <p><strong>The only permitted direct child of <code>ul</code>, <code>ol</code> and <code>menu</code> is <code>&lt;li&gt;</code></strong> (plus script-supporting elements). No <code>&lt;div&gt;</code> wrappers between them.</p>
+  </div>
+
+  <h2 id="table-anatomy">Full table example</h2>
+  <pre><code>&lt;table&gt;
+  &lt;caption&gt;Quarterly revenue (USD, thousands)&lt;/caption&gt;
+
+  &lt;colgroup&gt;
+    &lt;col&gt;
+    &lt;col span="2" class="numeric"&gt;
+  &lt;/colgroup&gt;
+
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th scope="col"&gt;Quarter&lt;/th&gt;
+      &lt;th scope="col"&gt;Revenue&lt;/th&gt;
+      &lt;th scope="col"&gt;Growth&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Q1&lt;/th&gt;
+      &lt;td&gt;120&lt;/td&gt;
+      &lt;td&gt;+4%&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Q2&lt;/th&gt;
+      &lt;td&gt;145&lt;/td&gt;
+      &lt;td&gt;+21%&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+
+  &lt;tfoot&gt;
+    &lt;tr&gt;
+      &lt;th scope="row"&gt;Total&lt;/th&gt;
+      &lt;td&gt;265&lt;/td&gt;
+      &lt;td&gt;+12%&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</code></pre>
+
+  <h2 id="complex-tables">Complex tables: id + headers</h2>
+  <pre><code>&lt;!-- When scope isn't enough (multi-level headers), link cells
+     to their headers explicitly with the headers attribute. --&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;td id="blank"&gt;&lt;/td&gt;
+      &lt;th id="q1" colspan="2" scope="colgroup"&gt;Q1&lt;/th&gt;
+      &lt;th id="q2" colspan="2" scope="colgroup"&gt;Q2&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th id="region" scope="col"&gt;Region&lt;/th&gt;
+      &lt;th id="q1-rev"  scope="col"&gt;Revenue&lt;/th&gt;
+      &lt;th id="q1-cost" scope="col"&gt;Cost&lt;/th&gt;
+      &lt;th id="q2-rev"  scope="col"&gt;Revenue&lt;/th&gt;
+      &lt;th id="q2-cost" scope="col"&gt;Cost&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th id="emea" scope="row"&gt;EMEA&lt;/th&gt;
+      &lt;td headers="emea q1 q1-rev"&gt;10&lt;/td&gt;
+      &lt;td headers="emea q1 q1-cost"&gt;4&lt;/td&gt;
+      &lt;td headers="emea q2 q2-rev"&gt;12&lt;/td&gt;
+      &lt;td headers="emea q2 q2-cost"&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
+  <div class="callout danger">
+    <span class="ico" aria-hidden="true">✕</span>
+    <p><strong>Never use tables for layout.</strong> They are for tabular data. A layout table forces a misleading reading order on screen readers, cannot reflow responsively, and is impossible to make accessible without heroics. Use CSS Grid or Flexbox.</p>
+  </div>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="06-media.html"><span class="pn-label">Previous</span><span class="pn-title">06 · Media</span></a>
+    <a class="page-next" href="08-forms.html"><span class="pn-label">Next</span><span class="pn-title">08 · Forms</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

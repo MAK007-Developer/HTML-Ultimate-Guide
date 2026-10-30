@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Complete HTML Guide — From first principles to advanced modern markup</title>
+<meta name="description" content="A complete, multi-page reference guide to HTML: fundamentals, structure, text, links, images, media, lists, tables, forms, semantics, interactive elements, global attributes, ARIA, SEO, performance, advanced APIs, validation and a gotchas appendix.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="brand" href="index.html">
+    <span class="logo" aria-hidden="true">&lt;/&gt;</span>
+    <span class="brand-text">The Complete HTML Guide</span>
+  </a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span>Topics</span>
+    </button>
+  </div>
+</header>
+
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+
+<aside class="sidebar" id="sidebar">
+  <p class="toc-heading">Topics</p>
+  <nav aria-label="Table of contents"><ul id="toc"></ul></nav>
+</aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">Reference guide</p>
+  <h1>The Complete HTML Guide</h1>
+  <p class="lede">
+    From first principles to advanced modern markup. This guide is split into one page per
+    topic — use the sidebar, the cards below, or the previous / next links on each page.
+    Every page includes copy-paste code examples and the reasoning behind the rules.
+  </p>
+
+  <div class="callout tip">
+    <span class="ico" aria-hidden="true">✔</span>
+    <p>
+      <strong>How to use this guide.</strong> Read it top to bottom once, then keep it open as a
+      checklist. Each page is self-contained, so you can jump straight to Forms, Accessibility
+      or Performance when you need them. All 20 files must sit in the same folder.
+    </p>
+  </div>
+
+  <h2 id="all-pages">All topics</h2>
+  <div class="card-grid">
+    <a class="card" href="01-fundamentals.html"><span class="card-num">01</span><span class="card-title">Mental Model &amp; Fundamentals</span><span class="card-desc">What HTML is, element anatomy, void elements, content models, illegal nesting, character references.</span></a>
+    <a class="card" href="02-structure.html"><span class="card-num">02</span><span class="card-title">Document Structure &amp; Metadata</span><span class="card-desc">Minimal document, non-negotiables, head elements, SEO/OG/Twitter metadata, the base warning.</span></a>
+    <a class="card" href="03-text.html"><span class="card-num">03</span><span class="card-title">Text Content</span><span class="card-desc">Headings, paragraphs, inline semantics, quotes, definition lists, time, ruby, bidi.</span></a>
+    <a class="card" href="04-links.html"><span class="card-num">04</span><span class="card-title">Links &amp; Navigation</span><span class="card-desc">The anchor element, path rules, noopener, fragments, skip links, image maps.</span></a>
+    <a class="card" href="05-images.html"><span class="card-num">05</span><span class="card-title">Images &amp; Responsive Images</span><span class="card-desc">alt rules, width/height, srcset, sizes, picture, figure, loading strategy.</span></a>
+    <a class="card" href="06-media.html"><span class="card-num">06</span><span class="card-title">Media</span><span class="card-desc">video, audio, iframe sandboxing, canvas and inline SVG.</span></a>
+    <a class="card" href="07-lists-tables.html"><span class="card-num">07</span><span class="card-title">Lists &amp; Tables</span><span class="card-desc">ul, ol, menu, full table anatomy, complex headers, why layout tables must die.</span></a>
+    <a class="card" href="08-forms.html"><span class="card-num">08</span><span class="card-title">Forms</span><span class="card-desc">Structure, input types, validation, errors, checkboxes/radios, autocomplete, CSRF, search.</span></a>
+    <a class="card" href="09-semantics.html"><span class="card-num">09</span><span class="card-title">Semantic Page Layout</span><span class="card-desc">Full skeleton, element semantics, rules of thumb, landmark naming.</span></a>
+    <a class="card" href="10-interactive.html"><span class="card-num">10</span><span class="card-title">Interactive &amp; Disclosure Elements</span><span class="card-desc">details/summary, dialog, the Popover API, template and slot.</span></a>
+    <a class="card" href="11-global-attributes.html"><span class="card-num">11</span><span class="card-title">Global Attributes</span><span class="card-desc">Full table of global attributes, data-* and the dataset API, hidden vs inert.</span></a>
+    <a class="card" href="12-accessibility.html"><span class="card-num">12</span><span class="card-title">Accessibility &amp; ARIA</span><span class="card-desc">First rule of ARIA, landmarks, accessible names, ARIA states, live regions, focus management.</span></a>
+    <a class="card" href="13-seo.html"><span class="card-num">13</span><span class="card-title">SEO, Social &amp; Structured Data</span><span class="card-desc">On-page essentials, crawling control, Open Graph, Twitter Cards, JSON-LD.</span></a>
+    <a class="card" href="14-performance.html"><span class="card-num">14</span><span class="card-title">Performance-Oriented HTML</span><span class="card-desc">Resource hints, preload rules, script loading, Core Web Vitals levers, noscript.</span></a>
+    <a class="card" href="15-advanced.html"><span class="card-num">15</span><span class="card-title">Advanced Topics</span><span class="card-desc">Custom Elements, Shadow DOM, Declarative Shadow DOM, PWA manifest, SRI/CSP.</span></a>
+    <a class="card" href="16-validation.html"><span class="card-num">16</span><span class="card-title">Validation, Tooling &amp; Final Checklist</span><span class="card-desc">Validation tools, 15 senior-level practices, before-you-ship checklist.</span></a>
+    <a class="card" href="appendix.html"><span class="card-num">A</span><span class="card-title">Appendix — Quick Gotchas</span><span class="card-desc">A symptom → cause lookup table for the bugs you will actually hit.</span></a>
+  </div>
+
+  <h2 id="organisation">How the pages are organised</h2>
+  <ul>
+    <li><strong>Pages 1–4</strong> build the mental model: what HTML is, how a document is structured, text content, and links.</li>
+    <li><strong>Pages 5–7</strong> cover the visual building blocks: images, media, lists and tables.</li>
+    <li><strong>Page 8</strong> is the deep dive on forms — the longest section.</li>
+    <li><strong>Pages 9–11</strong> cover semantics, interactive elements and global attributes.</li>
+    <li><strong>Pages 12–16</strong> are about quality: accessibility, SEO, performance, advanced APIs, and validation.</li>
+    <li><strong>Appendix</strong> is a symptom → cause lookup table for the bugs you will actually hit.</li>
+  </ul>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev is-empty" href="index.html" aria-disabled="true"><span class="pn-label">Previous</span><span class="pn-title">—</span></a>
+    <a class="page-next" href="01-fundamentals.html"><span class="pn-label">Next</span><span class="pn-title">01 · Mental Model &amp; Fundamentals</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script src="app.js" defer></script>
+</body>
+</html>

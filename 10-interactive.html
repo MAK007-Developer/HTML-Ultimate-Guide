@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>10 · Interactive &amp; Disclosure Elements — The Complete HTML Guide</title>
+<meta name="description" content="details/summary, dialog, the Popover API, template and slot.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">10 · Interactive</p>
+  <h1>Interactive &amp; Disclosure Elements</h1>
+  <p class="lede">Built-in interactive widgets that do the accessibility work for you — and the one thing you should use instead of a custom modal.</p>
+
+  <h2 id="details-summary">details / summary</h2>
+  <pre><code>&lt;!-- Basic disclosure --&gt;
+&lt;details&gt;
+  &lt;summary&gt;What is HTML?&lt;/summary&gt;
+  &lt;p&gt;HyperText Markup Language — the structure of the web.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;!-- Open by default --&gt;
+&lt;details open&gt;
+  &lt;summary&gt;Shipping&lt;/summary&gt;
+  &lt;p&gt;Ships in 2–3 business days.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;!-- Exclusive accordion: only one open at a time (shared name) --&gt;
+&lt;details name="faq"&gt;
+  &lt;summary&gt;Returns&lt;/summary&gt;
+  &lt;p&gt;30-day return window.&lt;/p&gt;
+&lt;/details&gt;
+&lt;details name="faq"&gt;
+  &lt;summary&gt;Warranty&lt;/summary&gt;
+  &lt;p&gt;2-year manufacturer warranty.&lt;/p&gt;
+&lt;/details&gt;
+
+&lt;!-- The summary is the keyboard-focusable control. Native toggle
+     events fire on the details element when its state changes. --&gt;</code></pre>
+
+  <h2 id="dialog">dialog</h2>
+  <pre><code>&lt;!-- Native modal dialog: showModal() gives you focus trapping,
+     ESC-to-close, and a ::backdrop pseudo-element for free. --&gt;
+&lt;dialog id="confirm"&gt;
+  &lt;form method="dialog"&gt;
+    &lt;p&gt;Delete this file?&lt;/p&gt;
+    &lt;button value="cancel"&gt;Cancel&lt;/button&gt;
+    &lt;button value="ok"&gt;Delete&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;
+
+&lt;button id="open"&gt;Delete…&lt;/button&gt;
+
+&lt;script type="module"&gt;
+  const dlg = document.getElementById("confirm");
+  const opener = document.getElementById("open");
+
+  opener.addEventListener("click", () =&gt; {
+    dlg.showModal();          // NOT show() — show() is non-modal
+  });
+
+  dlg.addEventListener("close", () =&gt; {
+    if (dlg.returnValue === "ok") {
+      console.log("deleted");
+    }
+    // Return focus to the element that opened the dialog.
+    opener.focus();
+  });
+&lt;/script&gt;
+
+&lt;style&gt;
+  dialog::backdrop { background: rgba(1,4,9,.55); }
+&lt;/style&gt;</code></pre>
+
+  <h2 id="popover">Popover API</h2>
+  <pre><code>&lt;!-- A popover is an element that can be shown/hidden from a
+     trigger button. The browser handles focus, ESC, and outside-click. --&gt;
+&lt;button popovertarget="menu"&gt;Open menu&lt;/button&gt;
+
+&lt;div id="menu" popover&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="/profile"&gt;Profile&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/settings"&gt;Settings&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/logout"&gt;Log out&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;!-- popover="manual" disables light-dismiss (click outside doesn't close) --&gt;
+&lt;div id="notice" popover="manual"&gt;Dismiss me with a button.&lt;/div&gt;
+
+&lt;!-- Programmatic control --&gt;
+&lt;script&gt;
+  const menu = document.getElementById("menu");
+  menu.showPopover();   // or hidePopover() / togglePopover()
+&lt;/script&gt;</code></pre>
+
+  <h2 id="template-slot">template and slot</h2>
+  <pre><code>&lt;!-- &lt;template&gt; is inert: it is parsed but not rendered.
+     Its content is available via .content for cloning. --&gt;
+&lt;template id="row-template"&gt;
+  &lt;tr&gt;
+    &lt;td class="name"&gt;&lt;/td&gt;
+    &lt;td class="email"&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+  const tpl = document.getElementById("row-template");
+  const row = tpl.content.cloneNode(true);
+  row.querySelector(".name").textContent = "Ada Lovelace";
+  row.querySelector(".email").textContent = "ada@example.com";
+  document.querySelector("tbody").appendChild(row);
+&lt;/script&gt;
+
+&lt;!-- &lt;slot&gt; is used inside a shadow root to project
+     user-supplied children into the component's tree. --&gt;
+&lt;!-- &lt;slot&gt;&lt;/slot&gt;            default slot
+     &lt;slot name="footer"&gt;&lt;/slot&gt; named slot
+     &lt;slot&gt;Fallback&lt;/slot&gt;      fallback content --&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="09-semantics.html"><span class="pn-label">Previous</span><span class="pn-title">09 · Semantic Page Layout</span></a>
+    <a class="page-next" href="11-global-attributes.html"><span class="pn-label">Next</span><span class="pn-title">11 · Global Attributes</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>04 · Links &amp; Navigation — The Complete HTML Guide</title>
+<meta name="description" content="The anchor element, path rules, best practices, noopener, fragment navigation, skip links and image maps.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">04 · Links</p>
+  <h1>Links &amp; Navigation</h1>
+  <p class="lede">The element that makes the web a web — plus the path rules, security attributes and accessibility habits that go with it.</p>
+
+  <h2 id="anchor-element">The <code>&lt;a&gt;</code> element</h2>
+  <pre><code>&lt;!-- External --&gt;
+&lt;a href="https://example.com" target="_blank" rel="noopener noreferrer"&gt;
+  Visit Example (opens in a new tab)
+&lt;/a&gt;
+
+&lt;!-- Same-page fragment --&gt;
+&lt;a href="#section-3"&gt;Jump to section 3&lt;/a&gt;
+
+&lt;!-- Email — prefill subject and body --&gt;
+&lt;a href="mailto:hello@example.com?subject=Hello&amp;body=Hi%20there"&gt;Email us&lt;/a&gt;
+
+&lt;!-- Phone --&gt;
+&lt;a href="tel:+15551234567"&gt;+1 555 123 4567&lt;/a&gt;
+
+&lt;!-- Download with a suggested filename --&gt;
+&lt;a href="/files/report.pdf" download="annual-report-2026.pdf"&gt;Download the report&lt;/a&gt;
+
+&lt;!-- Just a suggestion of a filename (cross-origin ignores it) --&gt;
+&lt;a href="/files/data.csv" download&gt;Download CSV&lt;/a&gt;</code></pre>
+
+  <h2 id="path-rules">Path rules</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>How an href resolves — current page is https://example.com/docs/guide/page.html</caption>
+      <thead><tr><th scope="col">Type</th><th scope="col">Example</th><th scope="col">Resolves to</th><th scope="col">Use when</th></tr></thead>
+      <tbody>
+        <tr><td>Absolute</td><td><code>https://other.com/a</code></td><td>Exactly as written</td><td>Cross-origin links, canonical, OG tags.</td></tr>
+        <tr><td>Root-relative</td><td><code>/docs/intro</code></td><td><code>https://example.com/docs/intro</code></td><td>Same site, stable regardless of page depth.</td></tr>
+        <tr><td>Relative</td><td><code>sibling.html</code></td><td><code>…/docs/guide/sibling.html</code></td><td>Neighbouring files in the same folder.</td></tr>
+        <tr><td>Parent</td><td><code>../index.html</code></td><td><code>…/docs/index.html</code></td><td>Going up one directory level.</td></tr>
+        <tr><td>Fragment</td><td><code>#pricing</code></td><td>Same URL + <code>#pricing</code></td><td>In-page navigation, skip links, TOC.</td></tr>
+        <tr><td>Query</td><td><code>?page=2</code></td><td>Same path + query string</td><td>Pagination, filters, tracking params.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="link-best-practices">Link best practices</h2>
+  <pre><code>&lt;!-- ❌ A link that goes nowhere --&gt;
+&lt;a href="#"&gt;Read more&lt;/a&gt;
+&lt;a href="javascript:void(0)"&gt;Read more&lt;/a&gt;
+
+&lt;!-- ✅ A real destination --&gt;
+&lt;a href="/blog/responsive-images"&gt;Read “Responsive Images Explained”&lt;/a&gt;
+
+&lt;!-- ❌ Non-descriptive link text (useless in a screen-reader link list) --&gt;
+&lt;a href="/report"&gt;Click here&lt;/a&gt;
+
+&lt;!-- ✅ Descriptive --&gt;
+&lt;a href="/report"&gt;Download the 2026 annual report (PDF, 4 MB)&lt;/a&gt;
+
+&lt;!-- ✅ Cross-origin links opened in a new tab --&gt;
+&lt;a href="https://external.example" target="_blank" rel="noopener noreferrer"&gt;
+  External resource
+&lt;/a&gt;
+
+&lt;!-- ✅ Indicate the current page inside a nav --&gt;
+&lt;nav aria-label="Main"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/docs" aria-current="page"&gt;Docs&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="/pricing"&gt;Pricing&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/nav&gt;</code></pre>
+  <div class="callout warn">
+    <span class="ico" aria-hidden="true">!</span>
+    <p><code>rel="noopener"</code> stops the opened page from accessing <code>window.opener</code> (a reverse-tabnabbing vector). Modern browsers imply it for <code>target="_blank"</code>, but writing it explicitly is still correct and protects older engines. <code>noreferrer</code> additionally strips the <code>Referer</code> header.</p>
+  </div>
+
+  <h2 id="fragment-skip">Fragment navigation and skip links</h2>
+  <pre><code>&lt;!-- Put the skip link first inside &lt;body&gt; --&gt;
+&lt;a class="skip-link" href="#main"&gt;Skip to main content&lt;/a&gt;
+
+&lt;header&gt; … navigation … &lt;/header&gt;
+
+&lt;!-- tabindex="-1" makes the target programmatically focusable,
+     so keyboard focus actually moves there in every browser. --&gt;
+&lt;main id="main" tabindex="-1"&gt;
+  &lt;h1&gt;Page title&lt;/h1&gt;
+&lt;/main&gt;
+
+&lt;!-- Any element with an id is a fragment target --&gt;
+&lt;h2 id="pricing"&gt;Pricing&lt;/h2&gt;
+&lt;a href="#pricing"&gt;See pricing&lt;/a&gt;</code></pre>
+
+  <h2 id="image-maps">Image maps</h2>
+  <pre><code>&lt;img src="/img/floorplan.png" alt="Ground floor plan"
+     usemap="#floorplan" width="800" height="600"&gt;
+
+&lt;map name="floorplan"&gt;
+  &lt;area shape="rect"   coords="34,44,270,350" href="/rooms/kitchen" alt="Kitchen"&gt;
+  &lt;area shape="circle" coords="400,300,60"    href="/rooms/bath"    alt="Bathroom"&gt;
+  &lt;area shape="poly"   coords="500,100,600,120,560,220" href="/rooms/study" alt="Study"&gt;
+&lt;/map&gt;
+
+&lt;!-- Every &lt;area&gt; needs an alt attribute — it is the accessible name. --&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="03-text.html"><span class="pn-label">Previous</span><span class="pn-title">03 · Text Content</span></a>
+    <a class="page-next" href="05-images.html"><span class="pn-label">Next</span><span class="pn-title">05 · Images &amp; Responsive Images</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

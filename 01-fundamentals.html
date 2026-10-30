@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>01 · Mental Model &amp; Fundamentals — The Complete HTML Guide</title>
+<meta name="description" content="What HTML actually is, element anatomy, void elements and the <div /> gotcha, content models, illegal nesting, character references, case and whitespace.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span>
+    </button>
+  </div>
+</header>
+
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+
+<aside class="sidebar" id="sidebar">
+  <p class="toc-heading">Topics</p>
+  <nav aria-label="Table of contents"><ul id="toc"></ul></nav>
+</aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">01 · Fundamentals</p>
+  <h1>Mental Model &amp; Fundamentals</h1>
+  <p class="lede">What HTML actually is, how an element is built, and the rules the parser will enforce whether you like it or not.</p>
+
+  <h2 id="what-html-is">What HTML actually is</h2>
+  <p>
+    HTML is a <strong>markup language for describing the structure and meaning</strong> of content.
+    It is not a programming language and not a styling language. The browser parses your markup
+    into a <strong>DOM tree</strong>; CSS decides how that tree looks, and JavaScript decides what it
+    does. When you write HTML you answer <em>“what is this thing?”</em> — a heading, a list, a
+    navigation landmark, a form control — not <em>“what should it look like?”</em>.
+  </p>
+  <div class="callout tip">
+    <span class="ico" aria-hidden="true">✔</span>
+    <p><strong>The core discipline:</strong> choose the element whose <em>meaning</em> matches the content. Styling comes later and can make any element look like anything. Semantic HTML survives when CSS fails to load, when a screen reader reads it, and when a search engine crawls it.</p>
+  </div>
+
+  <h2 id="element-anatomy">Anatomy of an element</h2>
+  <p>An element is an opening tag, optional attributes, content, and a closing tag.</p>
+  <pre><code>&lt;a href="/docs" class="link" target="_blank"&gt;Read the docs&lt;/a&gt;
+ │  └────┬───┘ └───┬────┘ └──────┬──────┘ └──────┬──────┘
+ │       │         │             │               └── text content
+ │       │         │             └── attribute value (quoted)
+ │       │         └── attribute name
+ │       └── attribute name
+ └── tag name
+
+&lt;!--  Breakdown of the five parts  --&gt;
+1. Opening tag        &lt;a ...&gt;
+2. Attribute name     href
+3. Attribute value    "/docs"
+4. Content            Read the docs
+5. Closing tag        &lt;/a&gt;</code></pre>
+
+  <h2 id="void-elements">Void (self-closing) elements — the <code>&lt;div /&gt;</code> gotcha</h2>
+  <p>Only a fixed set of elements are <strong>void</strong>: they cannot have children and never take a closing tag. They are <code>area</code>, <code>base</code>, <code>br</code>, <code>col</code>, <code>embed</code>, <code>hr</code>, <code>img</code>, <code>input</code>, <code>link</code>, <code>meta</code>, <code>source</code>, <code>track</code> and <code>wbr</code>.</p>
+  <pre><code>&lt;!-- ✅ Correct --&gt;
+&lt;div class="card"&gt;&lt;/div&gt;
+&lt;img src="a.png" alt="A"&gt;
+&lt;br&gt;
+&lt;hr&gt;
+
+&lt;!-- ❌ The trap: HTML does NOT support self-closing syntax --&gt;
+&lt;div class="card" /&gt;
+
+&lt;!-- The above is parsed as an ordinary opening tag: --&gt;
+&lt;div class="card"&gt;
+&lt;p&gt;This paragraph is now INSIDE the div&lt;/p&gt;
+&lt;!-- ...and every following sibling is swallowed by the div. --&gt;</code></pre>
+  <div class="callout warn">
+    <span class="ico" aria-hidden="true">!</span>
+    <p>A trailing slash on a non-void element is simply <strong>ignored</strong> by the HTML parser. Only XML/XHTML parsers care. Always write <code>&lt;div&gt;&lt;/div&gt;</code>.</p>
+  </div>
+
+  <h2 id="content-models">Content models</h2>
+  <p>Every element declares which categories of content it accepts. These are the categories you need to reason about.</p>
+  <div class="table-wrap">
+    <table>
+      <caption>HTML content categories</caption>
+      <thead><tr><th scope="col">Model</th><th scope="col">What it means</th><th scope="col">Typical members</th><th scope="col">Notes</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Flow</th><td>Almost everything that lives in the body.</td><td><code>div</code>, <code>p</code>, <code>ul</code>, <code>section</code>, <code>img</code>, <code>form</code></td><td>The broadest category; most body content is flow content.</td></tr>
+        <tr><th scope="row">Phrasing</th><td>Text-level content — what you'd put inside a sentence.</td><td><code>span</code>, <code>a</code>, <code>em</code>, <code>strong</code>, <code>code</code>, <code>img</code>, <code>kbd</code></td><td>Most phrasing content is also flow content.</td></tr>
+        <tr><th scope="row">Sectioning</th><td>Creates an outline entry / landmark-ish region.</td><td><code>section</code>, <code>article</code>, <code>nav</code>, <code>aside</code></td><td>Each should have an accessible name (heading or <code>aria-label</code>).</td></tr>
+        <tr><th scope="row">Heading</th><td>Section titles.</td><td><code>h1</code>–<code>h6</code>, <code>hgroup</code></td><td>Do not skip levels; do not use for visual size.</td></tr>
+        <tr><th scope="row">Embedded</th><td>External or generated content embedded in the document.</td><td><code>img</code>, <code>video</code>, <code>audio</code>, <code>iframe</code>, <code>canvas</code>, <code>svg</code></td><td>Always supply fallbacks and accessible names.</td></tr>
+        <tr><th scope="row">Interactive</th><td>Content that the user can activate or control.</td><td><code>a[href]</code>, <code>button</code>, <code>input</code>, <code>select</code>, <code>details</code>, <code>label</code></td><td>Interactive content must never nest inside interactive content.</td></tr>
+        <tr><th scope="row">Palpable</th><td>Content that is not hidden and has real substance.</td><td>Text, <code>img</code>, <code>video</code>, <code>input</code>, <code>blockquote</code></td><td>An element with no palpable content may be hidden from assistive tech.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="illegal-nesting">Illegal nesting examples</h2>
+  <pre><code>&lt;!-- ❌ Block content inside a paragraph --&gt;
+&lt;p&gt;Intro text &lt;div&gt;a block&lt;/div&gt; more text&lt;/p&gt;
+&lt;!-- The parser silently closes the &lt;p&gt; for you: --&gt;
+&lt;!-- &lt;p&gt;Intro text &lt;/p&gt;&lt;div&gt;a block&lt;/div&gt; more text&lt;p&gt;&lt;/p&gt; --&gt;
+
+&lt;!-- ❌ Interactive inside interactive --&gt;
+&lt;a href="/settings"&gt;&lt;button&gt;Settings&lt;/button&gt;&lt;/a&gt;
+
+&lt;!-- ❌ Nested links (the inner one is not a link at all) --&gt;
+&lt;a href="/a"&gt;Alpha &lt;a href="/b"&gt;Beta&lt;/a&gt;&lt;/a&gt;
+
+&lt;!-- ❌ List items outside a list --&gt;
+&lt;div&gt;&lt;li&gt;Orphan item&lt;/li&gt;&lt;/div&gt;
+
+&lt;!-- ❌ Table rows outside a table --&gt;
+&lt;div&gt;&lt;tr&gt;&lt;td&gt;Orphan cell&lt;/td&gt;&lt;/tr&gt;&lt;/div&gt;</code></pre>
+
+  <h2 id="character-references">Character references</h2>
+  <p>Three characters must be escaped in text content: <code>&amp;</code>, <code>&lt;</code> and (in attribute values) the quote character you are using. Everything else is optional but often clearer as a named reference.</p>
+  <pre><code>&amp;amp;    →  &amp;
+&amp;lt;     →  &lt;
+&amp;gt;     →  &gt;
+&amp;quot;   →  "
+&amp;#39;    →  '
+&amp;nbsp;   →  non-breaking space (glues words, does not collapse)
+&amp;copy;   →  ©
+&amp;mdash;  →  —
+&amp;rarr;   →  →
+&amp;hellip; →  …
+
+&lt;!-- Numeric references always work, even for characters with no name --&gt;
+&amp;#x1F600;  →  😀
+&amp;#8212;   →  —</code></pre>
+
+  <h2 id="case-quotes-whitespace">Case, quotes, whitespace</h2>
+  <pre><code>&lt;!-- Tag names and attribute names are case-insensitive... --&gt;
+&lt;P CLASS=lead&gt;Legacy uppercase still parses.&lt;/P&gt;
+
+&lt;!-- ...but lowercase is the universal convention. Attribute *values*
+     are case-sensitive: "GET" ≠ "get" in some contexts. --&gt;
+
+&lt;!-- Both quote styles are valid; double quotes are conventional --&gt;
+&lt;img src="a.png" alt='Single quotes are fine too'&gt;
+
+&lt;!-- Unquoted values work ONLY when there is no space or special char --&gt;
+&lt;input type=text name=email&gt;      &lt;!-- valid --&gt;
+&lt;input type=text name=my field&gt;   &lt;!-- ❌ breaks: use quotes --&gt;
+
+&lt;!-- Whitespace collapses: all of these render identically --&gt;
+&lt;p&gt;One   two
+   three&lt;/p&gt;
+
+&lt;!-- ...unless you preserve it: --&gt;
+&lt;pre&gt;Line one
+    indented line two&lt;/pre&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="index.html"><span class="pn-label">Previous</span><span class="pn-title">Home</span></a>
+    <a class="page-next" href="02-structure.html"><span class="pn-label">Next</span><span class="pn-title">02 · Document Structure &amp; Metadata</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<script src="app.js" defer></script>
+</body>
+</html>

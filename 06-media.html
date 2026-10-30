@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>06 · Media — The Complete HTML Guide</title>
+<meta name="description" content="Video, audio, iframe sandboxing, canvas and inline SVG.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">06 · Media</p>
+  <h1>Media</h1>
+  <p class="lede">Video, audio, iframes, canvas and inline SVG — including the security settings that actually matter.</p>
+
+  <h2 id="video">video</h2>
+  <pre><code>&lt;video controls
+       width="640" height="360"
+       poster="/img/poster.jpg"
+       preload="metadata"
+       playsinline
+       crossorigin="anonymous"&gt;
+  &lt;source src="/media/clip.webm" type="video/webm"&gt;
+  &lt;source src="/media/clip.mp4"  type="video/mp4"&gt;
+
+  &lt;!-- Captions are not optional for spoken content --&gt;
+  &lt;track kind="captions" src="/media/clip.en.vtt" srclang="en" label="English" default&gt;
+  &lt;track kind="subtitles" src="/media/clip.fr.vtt" srclang="fr" label="Français"&gt;
+  &lt;track kind="chapters"  src="/media/chapters.vtt" srclang="en" label="Chapters"&gt;
+
+  &lt;p&gt;Your browser can't play this video.
+     &lt;a href="/media/clip.mp4"&gt;Download the MP4&lt;/a&gt;.&lt;/p&gt;
+&lt;/video&gt;
+
+&lt;!-- Autoplay only works if the video is muted (and is hostile to users) --&gt;
+&lt;video autoplay muted loop playsinline src="/media/bg.mp4"&gt;&lt;/video&gt;
+
+&lt;!-- playsinline stops iOS from hijacking into fullscreen --&gt;
+&lt;!-- preload="metadata" fetches duration/dimensions but not the whole file --&gt;</code></pre>
+
+  <h2 id="audio">audio</h2>
+  <pre><code>&lt;audio controls preload="metadata"&gt;
+  &lt;source src="/media/episode-12.mp3" type="audio/mpeg"&gt;
+  &lt;source src="/media/episode-12.ogg" type="audio/ogg"&gt;
+  &lt;p&gt;Your browser can't play audio.
+     &lt;a href="/media/episode-12.mp3"&gt;Download the episode&lt;/a&gt;.&lt;/p&gt;
+&lt;/audio&gt;
+
+&lt;!-- Provide a transcript link alongside the player for accessibility. --&gt;</code></pre>
+
+  <h2 id="iframe">iframe</h2>
+  <pre><code>&lt;iframe src="https://player.example.com/embed/abc123"
+        title="Product tour video"
+        width="640" height="360"
+        loading="lazy"
+        referrerpolicy="strict-origin-when-cross-origin"
+        sandbox="allow-scripts allow-popups allow-presentation"
+        allow="fullscreen; picture-in-picture"
+        allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;!-- title is REQUIRED: it is the frame's accessible name and shows
+     when the frame fails to load. --&gt;</code></pre>
+  <div class="callout danger">
+    <span class="ico" aria-hidden="true">✕</span>
+    <p><strong>Never combine <code>allow-scripts</code> with <code>allow-same-origin</code></strong> on untrusted content. Together they let the framed document remove its own sandbox attribute and escape the sandbox entirely.</p>
+  </div>
+
+  <h2 id="canvas-svg">canvas and inline SVG</h2>
+  <pre><code>&lt;!-- Canvas needs an accessible name + a text fallback --&gt;
+&lt;canvas id="sales-chart" width="600" height="400"
+        role="img"
+        aria-label="Bar chart: sales rose from 12k in January to 31k in June"&gt;
+  &lt;p&gt;Sales rose from 12k in January to 31k in June.
+     &lt;a href="/data/sales.csv"&gt;Download the raw data&lt;/a&gt;.&lt;/p&gt;
+&lt;/canvas&gt;
+
+&lt;!-- Inline SVG: give it a role and a title when meaningful --&gt;
+&lt;svg role="img" aria-labelledby="warn-title" viewBox="0 0 24 24" width="24" height="24"&gt;
+  &lt;title id="warn-title"&gt;Warning&lt;/title&gt;
+  &lt;path d="M12 2 1 21h22L12 2zm0 6v7m0 3v.5" fill="none" stroke="currentColor"/&gt;
+&lt;/svg&gt;
+
+&lt;!-- Decorative SVG: hide it completely --&gt;
+&lt;svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="16" height="16"&gt;
+  &lt;path d="M4 4l16 16M20 4L4 20"/&gt;
+&lt;/svg&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="05-images.html"><span class="pn-label">Previous</span><span class="pn-title">05 · Images &amp; Responsive Images</span></a>
+    <a class="page-next" href="07-lists-tables.html"><span class="pn-label">Next</span><span class="pn-title">07 · Lists &amp; Tables</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

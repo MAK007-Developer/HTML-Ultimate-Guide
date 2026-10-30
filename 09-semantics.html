@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>09 · Semantic Page Layout — The Complete HTML Guide</title>
+<meta name="description" content="Full page skeleton, element semantics table, rules of thumb, landmark naming.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">09 · Semantics</p>
+  <h1>Semantic Page Layout</h1>
+  <p class="lede">The element set that gives a page a skeleton assistive tech and crawlers can actually understand.</p>
+
+  <h2 id="page-skeleton">Full page skeleton</h2>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Acme — Product engineering&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;a class="skip-link" href="#main"&gt;Skip to main content&lt;/a&gt;
+
+  &lt;header&gt;
+    &lt;a href="/" aria-label="Acme home"&gt;
+      &lt;img src="/logo.svg" alt="" width="120" height="32"&gt;
+    &lt;/a&gt;
+
+    &lt;nav aria-label="Primary"&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/product"&gt;Product&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/pricing"&gt;Pricing&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/docs" aria-current="page"&gt;Docs&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;main id="main" tabindex="-1"&gt;
+
+    &lt;article&gt;
+      &lt;header&gt;
+        &lt;h1&gt;Responsive images, explained&lt;/h1&gt;
+        &lt;p&gt;Published &lt;time datetime="2026-10-30"&gt;30 Oct 2026&lt;/time&gt;&lt;/p&gt;
+      &lt;/header&gt;
+
+      &lt;section aria-labelledby="srcset-heading"&gt;
+        &lt;h2 id="srcset-heading"&gt;srcset and sizes&lt;/h2&gt;
+        &lt;p&gt;…&lt;/p&gt;
+      &lt;/section&gt;
+
+      &lt;section aria-labelledby="picture-heading"&gt;
+        &lt;h2 id="picture-heading"&gt;When to use picture&lt;/h2&gt;
+        &lt;p&gt;…&lt;/p&gt;
+      &lt;/section&gt;
+    &lt;/article&gt;
+
+    &lt;aside aria-labelledby="related-heading"&gt;
+      &lt;h2 id="related-heading"&gt;Related reading&lt;/h2&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/docs/perf"&gt;Performance basics&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/docs/a11y"&gt;Accessibility basics&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/aside&gt;
+
+  &lt;/main&gt;
+
+  &lt;footer&gt;
+    &lt;address&gt;
+      Acme Inc.&lt;br&gt;
+      1 Rocket Road, Springfield
+    &lt;/address&gt;
+    &lt;p&gt;&lt;small&gt;© 2026 Acme Inc.&lt;/small&gt;&lt;/p&gt;
+  &lt;/footer&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h2 id="semantics-table">Element semantics</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>When to reach for each layout element</caption>
+      <thead><tr><th scope="col">Element</th><th scope="col">Meaning</th><th scope="col">Use for</th></tr></thead>
+      <tbody>
+        <tr><td><code>header</code></td><td>Introductory content for a page or a section</td><td>Site banner, article header, card header.</td></tr>
+        <tr><td><code>nav</code></td><td>Major navigation blocks</td><td>Primary menu, breadcrumbs, pagination, in-page TOC.</td></tr>
+        <tr><td><code>main</code></td><td>The dominant content of the document</td><td>Exactly one per page; skips duplicated chrome.</td></tr>
+        <tr><td><code>article</code></td><td>Self-contained, syndicatable content</td><td>Blog post, news story, forum post, comment, widget.</td></tr>
+        <tr><td><code>section</code></td><td>A thematic grouping with a heading</td><td>Chapters, tab panels, grouped form fields.</td></tr>
+        <tr><td><code>aside</code></td><td>Tangentially related content</td><td>Sidebar, pull quote, related links, ad slot.</td></tr>
+        <tr><td><code>footer</code></td><td>Footer for a page or section</td><td>Copyright, author info, related links.</td></tr>
+        <tr><td><code>address</code></td><td>Contact information for its nearest article/body</td><td>Author email, physical address.</td></tr>
+        <tr><td><code>div</code></td><td>Generic block container, no semantics</td><td>Styling hooks when nothing more specific fits.</td></tr>
+        <tr><td><code>span</code></td><td>Generic inline container, no semantics</td><td>Styling hooks inside a sentence.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="rules-of-thumb">Rules of thumb</h2>
+  <ul>
+    <li><strong>Use <code>div</code> as a last resort.</strong> If a section really is a thematic group, use <code>section</code>; if it's independently syndicatable, use <code>article</code>; if it's just a styling hook, <code>div</code> is fine.</li>
+    <li><strong>A <code>section</code> needs an accessible name</strong> — usually a heading inside it, linked via <code>aria-labelledby</code>, or an <code>aria-label</code> attribute.</li>
+    <li><strong><code>article</code> vs <code>section</code>:</strong> an article could stand alone (a blog post, a comment). A section is a chapter of the surrounding article.</li>
+    <li><strong>Landmarks should be distinct.</strong> Multiple <code>nav</code> elements are fine if each has a different <code>aria-label</code> ("Primary", "Breadcrumb", "Footer").</li>
+    <li><strong>Never wrap <code>main</code> in another <code>main</code>.</strong> One <code>&lt;main&gt;</code> per page.</li>
+  </ul>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="08-forms.html"><span class="pn-label">Previous</span><span class="pn-title">08 · Forms</span></a>
+    <a class="page-next" href="10-interactive.html"><span class="pn-label">Next</span><span class="pn-title">10 · Interactive &amp; Disclosure Elements</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

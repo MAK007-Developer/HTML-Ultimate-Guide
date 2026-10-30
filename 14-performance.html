@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14 · Performance-Oriented HTML — The Complete HTML Guide</title>
+<meta name="description" content="Resource hints, preload rules, script loading, Core Web Vitals HTML levers, noscript and progressive enhancement.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">14 · Performance</p>
+  <h1>Performance-Oriented HTML</h1>
+  <p class="lede">Resource hints, script loading, and the HTML levers that move Core Web Vitals.</p>
+
+  <h2 id="resource-hints">Resource hints</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Hints and their cost / benefit</caption>
+      <thead><tr><th scope="col">Hint</th><th scope="col">When to use</th><th scope="col">Cost</th><th scope="col">Benefit</th></tr></thead>
+      <tbody>
+        <tr><td><code>preconnect</code></td><td>Fonts, CDNs, API origins</td><td>One early connection per origin</td><td>Saves DNS + TLS on first request</td></tr>
+        <tr><td><code>dns-prefetch</code></td><td>Fallback for browsers without preconnect</td><td>DNS lookup only</td><td>Saves ~50ms on first request</td></tr>
+        <tr><td><code>preload</code></td><td>Critical late-discovered resources (fonts, hero image, key CSS)</td><td>High-priority fetch</td><td>Removes discovery latency</td></tr>
+        <tr><td><code>prefetch</code></td><td>Next-page navigation</td><td>Low-priority fetch</td><td>Near-instant navigation</td></tr>
+        <tr><td><code>prerender</code></td><td>Very likely next page</td><td>Full page fetch + render</td><td>Instant navigation</td></tr>
+        <tr><td><code>modulepreload</code></td><td>ES modules used on the page</td><td>Fetch + parse as module</td><td>Avoids waterfall</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <pre><code>&lt;!-- Preconnect to an origin you will definitely use --&gt;
+&lt;link rel="preconnect" href="https://fonts.example.com" crossorigin&gt;
+&lt;link rel="dns-prefetch" href="https://fonts.example.com"&gt;
+
+&lt;!-- Preload the LCP hero image --&gt;
+&lt;link rel="preload" as="image"
+      href="/img/hero.avif" type="image/avif"
+      imagesrcset="/img/hero.avif 1x, /img/hero@2x.avif 2x"
+      fetchpriority="high"&gt;
+
+&lt;!-- Preload a font — must include crossorigin --&gt;
+&lt;link rel="preload" as="font" type="font/woff2"
+      href="/fonts/inter.woff2" crossorigin&gt;</code></pre>
+
+  <h2 id="preload-rules">Preload rules</h2>
+  <ul>
+    <li><strong><code>as</code> is mandatory.</strong> A preload without <code>as</code> is ignored.</li>
+    <li><strong>Fonts must include <code>crossorigin</code></strong> — even same-origin fonts are fetched in CORS mode.</li>
+    <li><strong>Preload only what the page will use in the first paint.</strong> Over-preloading starves critical resources.</li>
+    <li><strong>Don't preload what the browser will discover anyway.</strong> Preload is for late-discovered resources — CSS background images, fonts referenced from CSS, JS-injected images.</li>
+  </ul>
+
+  <h2 id="script-loading">Script loading</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Script loading strategies</caption>
+      <thead><tr><th scope="col">Strategy</th><th scope="col">Download</th><th scope="col">Execution</th><th scope="col">Use when</th></tr></thead>
+      <tbody>
+        <tr><td>No attribute</td><td>Blocks parsing</td><td>Immediately when fetched</td><td>Almost never — only for very tiny inline init.</td></tr>
+        <tr><td><code>async</code></td><td>Parallel</td><td>As soon as fetched; may run out of order</td><td>Independent third-party widgets (analytics).</td></tr>
+        <tr><td><code>defer</code></td><td>Parallel</td><td>After parsing, in document order</td><td>Your own app code — the default choice.</td></tr>
+        <tr><td><code>type="module"</code></td><td>Parallel (defer by default)</td><td>After parsing, in order</td><td>Any modern ES module script.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <pre><code>&lt;!-- Default to defer for your own code. --&gt;
+&lt;script src="/app.js" defer&gt;&lt;/script&gt;
+
+&lt;!-- Module scripts defer automatically and also enforce order. --&gt;
+&lt;script type="module" src="/app.mjs"&gt;&lt;/script&gt;
+
+&lt;!-- Async is for independent, non-critical scripts. --&gt;
+&lt;script async src="https://analytics.example.com/a.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h2 id="cwv-levers">Core Web Vitals HTML levers</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>HTML changes that move each metric</caption>
+      <thead><tr><th scope="col">Metric</th><th scope="col">HTML lever</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LCP</strong> — Largest Contentful Paint</td><td>Preload the hero; do not lazy-load it; add <code>fetchpriority="high"</code>; serve modern formats (AVIF/WebP); use <code>srcset</code> to serve appropriately sized images.</td></tr>
+        <tr><td><strong>CLS</strong> — Cumulative Layout Shift</td><td>Always set <code>width</code> + <code>height</code> on images and <code>aspect-ratio</code> on video; reserve space for ads and embeds; avoid inserting content above existing content.</td></tr>
+        <tr><td><strong>INP</strong> — Interaction to Next Paint</td><td>Break up long tasks in JS; use <code>defer</code>; avoid large inline scripts; avoid layout thrash in event handlers.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="noscript">noscript and progressive enhancement</h2>
+  <pre><code>&lt;!-- Provide a fallback for the ~1% who have JS disabled,
+     and for the case where the script fails to load. --&gt;
+&lt;noscript&gt;
+  &lt;p&gt;This page works without JavaScript, but the interactive demo
+     needs it. &lt;a href="/demo-static"&gt;See the static version&lt;/a&gt;.&lt;/p&gt;
+&lt;/noscript&gt;
+
+&lt;!-- Progressive enhancement: build the HTML first, layer JS on top. --&gt;
+&lt;form action="/search" method="get"&gt;
+  &lt;input name="q" type="search" placeholder="Search…"&gt;
+  &lt;button type="submit"&gt;Search&lt;/button&gt;
+&lt;/form&gt;
+&lt;!-- With JS, this form can be intercepted and results streamed in.
+     Without JS, it submits normally. Either way, it works. --&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="13-seo.html"><span class="pn-label">Previous</span><span class="pn-title">13 · SEO, Social &amp; Structured Data</span></a>
+    <a class="page-next" href="15-advanced.html"><span class="pn-label">Next</span><span class="pn-title">15 · Advanced Topics</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

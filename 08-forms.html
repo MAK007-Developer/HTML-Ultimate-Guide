@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>08 · Forms — The Complete HTML Guide</title>
+<meta name="description" content="Form structure, attributes, input types, validation, errors, checkboxes/radios, autocomplete, CSRF, output/meter/progress, search landmark.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">08 · Forms</p>
+  <h1>Forms</h1>
+  <p class="lede">The longest section of this guide — forms are where accessibility, usability, security and browser quirks collide.</p>
+
+  <h2 id="form-structure">Structure: fieldset, legend, label, name, button</h2>
+  <pre><code>&lt;form action="/subscribe" method="post"&gt;
+  &lt;fieldset&gt;
+    &lt;legend&gt;Newsletter sign-up&lt;/legend&gt;
+
+    &lt;p&gt;
+      &lt;label for="email"&gt;Email address&lt;/label&gt;
+      &lt;input id="email" name="email" type="email"
+             autocomplete="email" required
+             aria-describedby="email-hint"&gt;
+      &lt;span id="email-hint"&gt;We'll never share it.&lt;/span&gt;
+    &lt;/p&gt;
+
+    &lt;p&gt;
+      &lt;button type="submit"&gt;Subscribe&lt;/button&gt;
+    &lt;/p&gt;
+  &lt;/fieldset&gt;
+&lt;/form&gt;</code></pre>
+  <ul>
+    <li><strong><code>fieldset</code> + <code>legend</code></strong> group related controls and give the group an accessible name.</li>
+    <li><strong><code>label</code> + <code>for</code></strong> must match the input's <code>id</code>. Clicking the label focuses the control.</li>
+    <li><strong><code>name</code></strong> is what actually gets submitted. A control without <code>name</code> sends nothing.</li>
+    <li><strong><code>type="submit"</code></strong> on every button — the default is submit, and an untyped button in a form will submit it when clicked.</li>
+  </ul>
+
+  <h2 id="form-attributes">form attributes</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Form attributes</caption>
+      <thead><tr><th scope="col">Attribute</th><th scope="col">Values</th><th scope="col">What it does</th></tr></thead>
+      <tbody>
+        <tr><td><code>action</code></td><td>URL</td><td>Where the form submits. Omit to submit to the current URL.</td></tr>
+        <tr><td><code>method</code></td><td><code>get</code> / <code>post</code></td><td><code>get</code> puts data in the URL (search forms); <code>post</code> puts it in the body (state changes).</td></tr>
+        <tr><td><code>enctype</code></td><td>urlencoded, <code>multipart/form-data</code>, <code>text/plain</code></td><td>Required for file uploads: <code>multipart/form-data</code>.</td></tr>
+        <tr><td><code>novalidate</code></td><td>boolean</td><td>Disables the browser's built-in validation UI.</td></tr>
+        <tr><td><code>autocomplete</code></td><td><code>on</code> / <code>off</code></td><td>Hints for the whole form; per-input tokens are far more useful.</td></tr>
+        <tr><td><code>target</code></td><td><code>_self</code>, <code>_blank</code>, name</td><td>Where to display the response. Pair with <code>rel="noopener"</code>.</td></tr>
+        <tr><td><code>rel</code></td><td><code>noopener</code>, <code>noreferrer</code></td><td>Security for <code>target="_blank"</code>.</td></tr>
+        <tr><td><code>accept-charset</code></td><td>encoding name</td><td>Rarely needed; UTF-8 is the norm.</td></tr>
+        <tr><td><code>name</code></td><td>string</td><td>Names the form for access via <code>document.forms</code>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="input-types">Input types</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Input types and their mobile keyboard</caption>
+      <thead><tr><th scope="col">type</th><th scope="col">Purpose</th><th scope="col">Mobile keyboard</th></tr></thead>
+      <tbody>
+        <tr><td><code>text</code></td><td>Generic single-line text</td><td>Default text</td></tr>
+        <tr><td><code>email</code></td><td>Email address (validates format, allows <code>multiple</code>)</td><td>Email keyboard</td></tr>
+        <tr><td><code>tel</code></td><td>Telephone number</td><td>Numeric dialpad</td></tr>
+        <tr><td><code>url</code></td><td>Absolute URL</td><td>URL keyboard</td></tr>
+        <tr><td><code>password</code></td><td>Obscured text</td><td>Default text (masked)</td></tr>
+        <tr><td><code>search</code></td><td>Search query</td><td>Default text, often with a search key</td></tr>
+        <tr><td><code>number</code></td><td>Floating-point number</td><td>Numeric keyboard — see the caveat below</td></tr>
+        <tr><td><code>range</code></td><td>Slider between min and max</td><td>Touch slider</td></tr>
+        <tr><td><code>date</code> / <code>time</code> / <code>datetime-local</code> / <code>month</code> / <code>week</code></td><td>Native pickers</td><td>Native pickers</td></tr>
+        <tr><td><code>color</code></td><td>Colour picker</td><td>Native colour picker</td></tr>
+        <tr><td><code>checkbox</code> / <code>radio</code></td><td>Boolean / one-of-many</td><td>Tap targets</td></tr>
+        <tr><td><code>file</code></td><td>File upload</td><td>Native file picker</td></tr>
+        <tr><td><code>hidden</code></td><td>Non-visible value</td><td>None</td></tr>
+        <tr><td><code>submit</code> / <code>reset</code> / <code>button</code> / <code>image</code></td><td>Action buttons</td><td>Tap targets</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="number-caveat">The <code>type="number"</code> caveat</h2>
+  <pre><code>&lt;!-- ❌ type="number" is a bad fit for things that *look* numeric
+     but aren't quantities: phone numbers, postal codes, credit cards,
+     OTPs. It strips leading zeros, allows "e", "E", "+" and "-", and
+     silently converts on scroll. --&gt;
+&lt;input type="number" name="zip"&gt;
+
+&lt;!-- ✅ Use a text input with a numeric keyboard hint --&gt;
+&lt;input type="text" name="zip"
+       inputmode="numeric"
+       pattern="[0-9]{5}"
+       autocomplete="postal-code"
+       maxlength="5"&gt;
+
+&lt;!-- inputmode values: numeric, decimal, tel, email, url, search, text --&gt;</code></pre>
+
+  <h2 id="validation-attributes">Validation attributes</h2>
+  <pre><code>&lt;input type="text"
+       name="username"
+       required
+       minlength="3"
+       maxlength="20"
+       pattern="[a-zA-Z0-9_]{3,20}"&gt;
+
+&lt;input type="number" name="qty" min="1" max="99" step="1"&gt;
+
+&lt;input type="file" name="avatar" accept="image/png, image/jpeg"&gt;
+
+&lt;input type="email" name="email" multiple&gt;
+
+&lt;!-- pattern is matched against the *entire* value, anchored implicitly.
+     Escape regex special chars carefully inside the attribute. --&gt;</code></pre>
+
+  <h2 id="labels-hints-errors">Labels, hints and errors</h2>
+  <pre><code>&lt;div class="field"&gt;
+  &lt;label for="pw"&gt;Password&lt;/label&gt;
+  &lt;input id="pw" name="password" type="password"
+         autocomplete="new-password"
+         required
+         minlength="12"
+         aria-describedby="pw-hint pw-error"
+         aria-invalid="true"&gt;
+  &lt;p id="pw-hint"&gt;At least 12 characters.&lt;/p&gt;
+  &lt;p id="pw-error" role="alert"&gt;
+    Password must contain at least one number.
+  &lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- aria-describedby points at BOTH the hint and the error.
+     role="alert" announces the error as soon as it appears.
+     aria-invalid="true" tells AT the field's current state. --&gt;</code></pre>
+
+  <h2 id="checkboxes-radios">Checkboxes and radios</h2>
+  <pre><code>&lt;!-- Checkbox: independent booleans --&gt;
+&lt;fieldset&gt;
+  &lt;legend&gt;Notifications&lt;/legend&gt;
+
+  &lt;label&gt;
+    &lt;input type="checkbox" name="notify" value="email" checked&gt;
+    Email
+  &lt;/label&gt;
+
+  &lt;label&gt;
+    &lt;input type="checkbox" name="notify" value="sms"&gt;
+    SMS
+  &lt;/label&gt;
+&lt;/fieldset&gt;
+
+&lt;!-- Radio: one-of-many, grouped by shared name --&gt;
+&lt;fieldset&gt;
+  &lt;legend&gt;Plan&lt;/legend&gt;
+
+  &lt;label&gt;
+    &lt;input type="radio" name="plan" value="free" checked&gt;
+    Free
+  &lt;/label&gt;
+
+  &lt;label&gt;
+    &lt;input type="radio" name="plan" value="pro"&gt;
+    Pro
+  &lt;/label&gt;
+&lt;/fieldset&gt;
+
+&lt;!-- Wrapping the input inside the label is the most robust
+     association method — no for/id required. --&gt;</code></pre>
+
+  <h2 id="select-datalist">select, optgroup, datalist, textarea</h2>
+  <pre><code>&lt;!-- select --&gt;
+&lt;label for="country"&gt;Country&lt;/label&gt;
+&lt;select id="country" name="country" autocomplete="country"&gt;
+  &lt;option value=""&gt;Choose…&lt;/option&gt;
+  &lt;optgroup label="Europe"&gt;
+    &lt;option value="fr"&gt;France&lt;/option&gt;
+    &lt;option value="de"&gt;Germany&lt;/option&gt;
+  &lt;/optgroup&gt;
+  &lt;optgroup label="North America"&gt;
+    &lt;option value="us"&gt;United States&lt;/option&gt;
+    &lt;option value="ca"&gt;Canada&lt;/option&gt;
+  &lt;/optgroup&gt;
+&lt;/select&gt;
+
+&lt;!-- multiple --&gt;
+&lt;select name="tags" multiple size="4"&gt;
+  &lt;option value="html" selected&gt;HTML&lt;/option&gt;
+  &lt;option value="css"&gt;CSS&lt;/option&gt;
+  &lt;option value="js"&gt;JavaScript&lt;/option&gt;
+&lt;/select&gt;
+
+&lt;!-- datalist: free text with suggestions --&gt;
+&lt;label for="browser"&gt;Browser&lt;/label&gt;
+&lt;input id="browser" name="browser" list="browsers" autocomplete="off"&gt;
+&lt;datalist id="browsers"&gt;
+  &lt;option value="Chrome"&gt;
+  &lt;option value="Firefox"&gt;
+  &lt;option value="Safari"&gt;
+  &lt;option value="Edge"&gt;
+&lt;/datalist&gt;
+
+&lt;!-- textarea --&gt;
+&lt;label for="bio"&gt;Bio&lt;/label&gt;
+&lt;textarea id="bio" name="bio" rows="6" maxlength="500"
+          placeholder="Tell us about yourself…"&gt;&lt;/textarea&gt;
+&lt;p id="bio-hint"&gt;&lt;small&gt;Max 500 characters.&lt;/small&gt;&lt;/p&gt;</code></pre>
+
+  <h2 id="buttons-overrides">Buttons and form overrides</h2>
+  <pre><code>&lt;form action="/save" method="post"&gt;
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+
+  &lt;!-- Override the form's action, method and validation per button --&gt;
+  &lt;button type="submit"
+          formaction="/save-draft"
+          formmethod="post"
+          formnovalidate&gt;
+    Save draft
+  &lt;/button&gt;
+
+  &lt;!-- A non-submitting button MUST have type="button" --&gt;
+  &lt;button type="button" onclick="preview()"&gt;Preview&lt;/button&gt;
+
+  &lt;!-- Reset buttons are usually a bad idea --&gt;
+  &lt;button type="reset"&gt;Reset&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+
+  <h2 id="autocomplete-tokens">Autocomplete tokens</h2>
+  <pre><code>&lt;input name="given"    autocomplete="given-name"&gt;
+&lt;input name="family"   autocomplete="family-name"&gt;
+&lt;input name="email"    autocomplete="email" type="email"&gt;
+&lt;input name="phone"    autocomplete="tel" type="tel"&gt;
+&lt;input name="street"   autocomplete="street-address"&gt;
+&lt;input name="postcode" autocomplete="postal-code"&gt;
+&lt;input name="cc"       autocomplete="cc-number" inputmode="numeric"&gt;
+&lt;input name="otp"      autocomplete="one-time-code" inputmode="numeric"&gt;
+&lt;input name="current"  autocomplete="current-password" type="password"&gt;
+&lt;input name="new"      autocomplete="new-password" type="password"&gt;
+
+&lt;!-- Full token list: https://html.spec.whatwg.org/#autofill-field --&gt;</code></pre>
+
+  <h2 id="hidden-csrf">Hidden fields and CSRF</h2>
+  <pre><code>&lt;form action="/transfer" method="post"&gt;
+  &lt;!-- CSRF token — rendered server-side, unique per session --&gt;
+  &lt;input type="hidden" name="csrf_token" value="a8f3…"&gt;
+
+  &lt;!-- Other hidden state (IDs, return URLs, version numbers) --&gt;
+  &lt;input type="hidden" name="return_to" value="/dashboard"&gt;
+  &lt;input type="hidden" name="version" value="3"&gt;
+
+  &lt;button type="submit"&gt;Transfer&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;!-- Never put secrets in hidden fields: they are visible in the DOM.
+     Verify the CSRF token server-side on every state-changing request. --&gt;</code></pre>
+
+  <h2 id="output-meter-progress">output, meter, progress</h2>
+  <pre><code>&lt;!-- output: a calculated result --&gt;
+&lt;form oninput="total.value = Number(a.value) + Number(b.value)"&gt;
+  &lt;input id="a" name="a" type="number" value="0"&gt;
+  +
+  &lt;input id="b" name="b" type="number" value="0"&gt;
+  =
+  &lt;output name="total" for="a b"&gt;0&lt;/output&gt;
+&lt;/form&gt;
+
+&lt;!-- meter: a scalar measurement within a known range --&gt;
+&lt;label for="disk"&gt;Disk usage&lt;/label&gt;
+&lt;meter id="disk" min="0" max="100" low="30" high="80" optimum="20" value="72"&gt;
+  72%
+&lt;/meter&gt;
+
+&lt;!-- progress: completion of a task --&gt;
+&lt;label for="upload"&gt;Uploading…&lt;/label&gt;
+&lt;progress id="upload" max="100" value="45"&gt;45%&lt;/progress&gt;
+
+&lt;!-- Indeterminate progress --&gt;
+&lt;progress&gt;Loading…&lt;/progress&gt;</code></pre>
+
+  <h2 id="search-landmark">The <code>&lt;search&gt;</code> landmark</h2>
+  <pre><code>&lt;!-- &lt;search&gt; is a landmark element for site-wide search forms --&gt;
+&lt;search&gt;
+  &lt;form action="/search" method="get" role="search"&gt;
+    &lt;label for="q"&gt;Search the site&lt;/label&gt;
+    &lt;input id="q" name="q" type="search" placeholder="Search…"&gt;
+    &lt;button type="submit"&gt;Search&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/search&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="07-lists-tables.html"><span class="pn-label">Previous</span><span class="pn-title">07 · Lists &amp; Tables</span></a>
+    <a class="page-next" href="09-semantics.html"><span class="pn-label">Next</span><span class="pn-title">09 · Semantic Page Layout</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

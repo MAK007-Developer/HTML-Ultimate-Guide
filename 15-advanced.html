@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>15 · Advanced Topics — The Complete HTML Guide</title>
+<meta name="description" content="Custom Elements, Shadow DOM, Declarative Shadow DOM, Microdata vs JSON-LD, PWA manifest, SRI, referrer, CSP.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">15 · Advanced</p>
+  <h1>Advanced Topics</h1>
+  <p class="lede">Custom Elements, Shadow DOM, PWA manifest and the HTML meta tags that harden a page.</p>
+
+  <h2 id="custom-elements">Custom Elements</h2>
+  <pre><code>&lt;!-- Hyphen in the name is mandatory — it prevents collisions
+     with built-in elements. Must be loaded as type="module". --&gt;
+&lt;user-card user-id="42"&gt;&lt;/user-card&gt;
+
+&lt;script type="module"&gt;
+  class UserCard extends HTMLElement {
+    // Which attributes trigger attributeChangedCallback
+    static get observedAttributes() { return ["user-id"]; }
+
+    connectedCallback() {
+      this.render();
+    }
+
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (oldValue !== newValue) this.render();
+    }
+
+    render() {
+      const id = this.getAttribute("user-id") ?? "—";
+      this.textContent = `User #${id}`;
+    }
+  }
+  customElements.define("user-card", UserCard);
+&lt;/script&gt;</code></pre>
+
+  <h2 id="shadow-dom">Shadow DOM</h2>
+  <pre><code>&lt;script type="module"&gt;
+  class FancyButton extends HTMLElement {
+    constructor() {
+      super();
+      const root = this.attachShadow({ mode: "open" });
+
+      root.innerHTML = `
+        &lt;style&gt;
+          :host { display: inline-block; }
+          :host([disabled]) { opacity: .5; pointer-events: none; }
+          button { font: inherit; padding: .5rem 1rem;
+                   border-radius: 6px; border: 1px solid #ccc;
+                   background: #fff; }
+          ::slotted(span) { font-weight: 700; }
+          button::part(label) { letter-spacing: .02em; }
+        &lt;/style&gt;
+        &lt;button part="button"&gt;&lt;slot name="label"&gt;Click&lt;/slot&gt;&lt;/button&gt;
+      `;
+    }
+  }
+  customElements.define("fancy-button", FancyButton);
+&lt;/script&gt;
+
+&lt;fancy-button&gt;
+  &lt;span slot="label"&gt;Save&lt;/span&gt;
+&lt;/fancy-button&gt;</code></pre>
+  <ul>
+    <li><code>:host</code> styles the custom element itself from inside the shadow root.</li>
+    <li><code>:host([attr])</code> matches when the host has a given attribute.</li>
+    <li><code>::slotted(selector)</code> styles light-DOM children projected into slots.</li>
+    <li><code>::part(name)</code> lets a shadow part be styled from outside the component.</li>
+  </ul>
+
+  <h2 id="declarative-shadow">Declarative Shadow DOM</h2>
+  <pre><code>&lt;!-- Server-rendered shadow DOM, no JS required to attach.
+     template shadowrootmode="open" creates the shadow root during
+     HTML parsing; children of the template become the shadow content. --&gt;
+&lt;my-badge&gt;
+  &lt;template shadowrootmode="open"&gt;
+    &lt;style&gt;
+      :host { display: inline-block; padding: .2rem .6rem;
+              border-radius: 999px; background: #0969da; color: #fff; }
+    &lt;/style&gt;
+    &lt;slot&gt;&lt;/slot&gt;
+  &lt;/template&gt;
+  New
+&lt;/my-badge&gt;</code></pre>
+
+  <h2 id="microdata-jsonld">Microdata vs JSON-LD</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Structured data formats</caption>
+      <thead><tr><th scope="col">Format</th><th scope="col">Where it lives</th><th scope="col">Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Microdata</td><td>Inline <code>itemscope</code> / <code>itemprop</code> attributes in your markup</td><td>Couples markup and data; harder to maintain.</td></tr>
+        <tr><td>Microformats</td><td>Class names (<code>h-card</code>, <code>h-entry</code>)</td><td>Niche; not widely consumed.</td></tr>
+        <tr><td>RDFa</td><td>Inline attributes</td><td>Overkill for most sites.</td></tr>
+        <tr><td>JSON-LD</td><td>A <code>&lt;script type="application/ld+json"&gt;</code> block</td><td><strong>Preferred.</strong> Decoupled from markup, easy to generate server-side, easy to validate.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="pwa-manifest">PWA manifest</h2>
+  <pre><code>&lt;link rel="manifest" href="/manifest.webmanifest"&gt;
+&lt;meta name="theme-color" content="#0d1117"&gt;
+
+&lt;!-- manifest.webmanifest --&gt;
+{
+  "name": "Acme Docs",
+  "short_name": "Acme",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d1117",
+  "icons": [
+    { "src": "/icons/192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512",
+      "type": "image/png", "purpose": "maskable" }
+  ]
+}</code></pre>
+
+  <h2 id="security">Security: SRI, referrer, CSP</h2>
+  <pre><code>&lt;!-- Subresource Integrity: pin a CDN file to an exact hash.
+     If the file changes, the browser refuses to execute it. --&gt;
+&lt;script src="https://cdn.example.com/lib.js"
+        integrity="sha384-BASE64HASHHERE"
+        crossorigin="anonymous"&gt;&lt;/script&gt;
+
+&lt;!-- Cross-origin stylesheet SRI --&gt;
+&lt;link rel="stylesheet"
+      href="https://cdn.example.com/style.css"
+      integrity="sha384-BASE64HASHHERE"
+      crossorigin="anonymous"&gt;
+
+&lt;!-- Referrer policy: send full URL to same-origin, only origin to
+     cross-origin, nothing on downgrade. --&gt;
+&lt;meta name="referrer" content="strict-origin-when-cross-origin"&gt;
+
+&lt;!-- CSP via meta tag — a nonce lets you whitelist one inline script
+     without enabling all of them. --&gt;
+&lt;meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               script-src 'self' 'nonce-rAnd0m123';
+               style-src  'self' 'unsafe-inline';
+               img-src    'self' https://cdn.example.com data:;"&gt;
+&lt;script nonce="rAnd0m123"&gt;
+  // this inline script is allowed by the nonce above
+&lt;/script&gt;
+
+&lt;!-- ⚠️  NEVER use meta refresh to redirect to an untrusted URL —
+     it is a common open-redirect and phishing vector. Use a server
+     301/302 instead. --&gt;</code></pre>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="14-performance.html"><span class="pn-label">Previous</span><span class="pn-title">14 · Performance-Oriented HTML</span></a>
+    <a class="page-next" href="16-validation.html"><span class="pn-label">Next</span><span class="pn-title">16 · Validation, Tooling &amp; Final Checklist</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

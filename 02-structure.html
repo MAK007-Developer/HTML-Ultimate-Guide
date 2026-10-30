@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>02 · Document Structure &amp; Metadata — The Complete HTML Guide</title>
+<meta name="description" content="Minimal modern document, non-negotiables, elements allowed in head, essential SEO and Open Graph metadata, the base warning.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span>
+    </button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">02 · Structure</p>
+  <h1>Document Structure &amp; Metadata</h1>
+  <p class="lede">The skeleton every page needs, the metadata that actually matters, and the one element you should probably never use.</p>
+
+  <h2 id="minimal-doc">Minimal modern document</h2>
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+  &lt;title&gt;Page title — Site name&lt;/title&gt;
+  &lt;meta name="description" content="A 150–160 character summary of this specific page."&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Hello, world&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <h2 id="non-negotiables">Non-negotiables</h2>
+  <ul>
+    <li><strong><code>&lt;!DOCTYPE html&gt;</code></strong> as the very first thing — without it you get quirks mode.</li>
+    <li><strong><code>lang</code></strong> on <code>&lt;html&gt;</code> — drives screen-reader pronunciation, hyphenation and translation.</li>
+    <li><strong><code>&lt;meta charset="utf-8"&gt;</code></strong> within the first 1024 bytes.</li>
+    <li><strong>Viewport meta</strong> — without it, mobile browsers render at a fake 980px width.</li>
+    <li><strong>A unique, descriptive <code>&lt;title&gt;</code></strong> — the single most important SEO string on the page.</li>
+    <li><strong>Exactly one <code>&lt;h1&gt;</code></strong> that matches the page's purpose.</li>
+    <li><strong>Valid nesting</strong> — the parser will “fix” your mistakes in ways you won't like.</li>
+  </ul>
+
+  <h2 id="head-elements">Elements allowed in <code>&lt;head&gt;</code></h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Metadata content permitted inside &lt;head&gt;</caption>
+      <thead><tr><th scope="col">Element</th><th scope="col">Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>title</code></td><td>Document title (required, exactly one).</td></tr>
+        <tr><td><code>meta</code></td><td>Character set, viewport, description, robots, Open Graph, theme-color…</td></tr>
+        <tr><td><code>link</code></td><td>Stylesheets, icons, canonical, preload/preconnect, manifest, alternate.</td></tr>
+        <tr><td><code>style</code></td><td>Embedded CSS.</td></tr>
+        <tr><td><code>script</code></td><td>JavaScript (use <code>defer</code>, <code>async</code> or <code>type="module"</code>).</td></tr>
+        <tr><td><code>noscript</code></td><td>Fallback markup when scripting is disabled.</td></tr>
+        <tr><td><code>base</code></td><td>Base URL for relative links — use with extreme care.</td></tr>
+        <tr><td><code>template</code></td><td>Inert markup to be cloned later.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="essential-metadata">Essential metadata</h2>
+  <pre><code>&lt;!-- ═══ SEO ═══ --&gt;
+&lt;title&gt;Responsive Images Explained — Acme Docs&lt;/title&gt;
+&lt;meta name="description" content="How srcset, sizes and picture work, with copy-paste examples."&gt;
+&lt;link rel="canonical" href="https://example.com/docs/responsive-images"&gt;
+
+&lt;!-- ═══ Open Graph (Facebook, LinkedIn, Slack, Discord…) ═══ --&gt;
+&lt;meta property="og:type" content="article"&gt;
+&lt;meta property="og:title" content="Responsive Images Explained"&gt;
+&lt;meta property="og:description" content="How srcset, sizes and picture work."&gt;
+&lt;meta property="og:image" content="https://example.com/og/responsive-images.png"&gt;
+&lt;meta property="og:image:width" content="1200"&gt;
+&lt;meta property="og:image:height" content="630"&gt;
+&lt;meta property="og:url" content="https://example.com/docs/responsive-images"&gt;
+&lt;meta property="og:site_name" content="Acme Docs"&gt;
+
+&lt;!-- ═══ Twitter / X cards ═══ --&gt;
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content="Responsive Images Explained"&gt;
+&lt;meta name="twitter:description" content="How srcset, sizes and picture work."&gt;
+&lt;meta name="twitter:image" content="https://example.com/og/responsive-images.png"&gt;
+
+&lt;!-- ═══ Icons &amp; PWA ═══ --&gt;
+&lt;link rel="icon" href="/favicon.ico" sizes="32x32"&gt;
+&lt;link rel="icon" href="/icon.svg" type="image/svg+xml"&gt;
+&lt;link rel="apple-touch-icon" href="/apple-touch-icon.png"&gt;  &lt;!-- 180×180 --&gt;
+&lt;link rel="manifest" href="/manifest.webmanifest"&gt;
+
+&lt;!-- ═══ Browser chrome colour (one per scheme) ═══ --&gt;
+&lt;meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"&gt;
+&lt;meta name="theme-color" content="#0d1117" media="(prefers-color-scheme: dark)"&gt;</code></pre>
+
+  <h2 id="base-warning">The <code>&lt;base&gt;</code> warning</h2>
+  <pre><code>&lt;!-- ⚠️  Think twice. This changes the resolution of EVERY relative URL
+        on the page: links, images, scripts, stylesheets, forms and even
+        same-page "#fragment" links. --&gt;
+&lt;base href="https://example.com/"&gt;
+
+&lt;!-- Only one &lt;base&gt; per document, and it must appear before any URL
+     that it should affect. --&gt;
+&lt;base target="_blank"&gt;   &lt;!-- also sets a default for all links --&gt;</code></pre>
+  <div class="callout danger">
+    <span class="ico" aria-hidden="true">✕</span>
+    <p>Prefer absolute or root-relative paths over <code>&lt;base&gt;</code>. It is one of the most common causes of “works locally, 404s in production” bugs, and it silently breaks in-page anchors.</p>
+  </div>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="01-fundamentals.html"><span class="pn-label">Previous</span><span class="pn-title">01 · Mental Model &amp; Fundamentals</span></a>
+    <a class="page-next" href="03-text.html"><span class="pn-label">Next</span><span class="pn-title">03 · Text Content</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

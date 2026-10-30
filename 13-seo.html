@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13 · SEO, Social &amp; Structured Data — The Complete HTML Guide</title>
+<meta name="description" content="On-page essentials, crawling control, Open Graph and Twitter Cards, JSON-LD structured data, why semantic HTML is SEO.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">13 · SEO</p>
+  <h1>SEO, Social &amp; Structured Data</h1>
+  <p class="lede">The handful of HTML strings that influence search ranking, sharing previews, and rich results.</p>
+
+  <h2 id="on-page-essentials">On-page essentials</h2>
+  <pre><code>&lt;!-- Every page needs a unique, descriptive title. --&gt;
+&lt;title&gt;Responsive Images Explained — Acme Docs&lt;/title&gt;
+
+&lt;!-- The description is what shows under the title in search results. --&gt;
+&lt;meta name="description" content="How srcset, sizes and picture work, with copy-paste examples."&gt;
+
+&lt;!-- Canonical: the authoritative URL for this content. --&gt;
+&lt;link rel="canonical" href="https://example.com/docs/responsive-images"&gt;
+
+&lt;!-- One H1 that matches the page's purpose. --&gt;
+&lt;h1&gt;Responsive images, explained&lt;/h1&gt;</code></pre>
+
+  <h2 id="crawling-control">Crawling control</h2>
+  <pre><code>&lt;!-- Allow indexing (default) --&gt;
+&lt;meta name="robots" content="index, follow"&gt;
+
+&lt;!-- Do not index this page --&gt;
+&lt;meta name="robots" content="noindex, follow"&gt;
+
+&lt;!-- Do not follow links --&gt;
+&lt;meta name="robots" content="noindex, nofollow"&gt;
+
+&lt;!-- Tell crawlers a different canonical URL (cross-domain) --&gt;
+&lt;link rel="canonical" href="https://canonical.example/page"&gt;
+
+&lt;!-- robots.txt (server file, not HTML):
+     User-agent: *
+     Disallow: /admin/
+     Sitemap: https://example.com/sitemap.xml --&gt;</code></pre>
+  <div class="callout warn">
+    <span class="ico" aria-hidden="true">!</span>
+    <p><code>noindex</code> vs <code>robots.txt</code>: <code>noindex</code> keeps a page out of the index but allows it to be crawled. <code>robots.txt</code> blocks crawling entirely — which means a crawler can never see your <code>noindex</code> tag. Use <code>noindex</code> to remove a page from results; use <code>robots.txt</code> to protect a private path.</p>
+  </div>
+
+  <h2 id="open-graph">Open Graph + Twitter Cards</h2>
+  <pre><code>&lt;!-- Open Graph: used by Facebook, LinkedIn, Slack, Discord, iMessage. --&gt;
+&lt;meta property="og:type" content="article"&gt;
+&lt;meta property="og:title" content="Responsive Images Explained"&gt;
+&lt;meta property="og:description" content="How srcset, sizes and picture work."&gt;
+&lt;meta property="og:image" content="https://example.com/og/responsive-images.png"&gt;
+&lt;meta property="og:image:width" content="1200"&gt;
+&lt;meta property="og:image:height" content="630"&gt;
+&lt;meta property="og:url" content="https://example.com/docs/responsive-images"&gt;
+&lt;meta property="og:site_name" content="Acme Docs"&gt;
+
+&lt;!-- Twitter / X cards --&gt;
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content="Responsive Images Explained"&gt;
+&lt;meta name="twitter:description" content="How srcset, sizes and picture work."&gt;
+&lt;meta name="twitter:image" content="https://example.com/og/responsive-images.png"&gt;
+
+&lt;!-- og:image MUST be an absolute URL — relative paths are ignored.
+     Recommended size: 1200×630 (1.91:1). --&gt;</code></pre>
+
+  <h2 id="json-ld">JSON-LD structured data</h2>
+  <pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Responsive Images Explained",
+  "description": "How srcset, sizes and picture work.",
+  "image": "https://example.com/og/responsive-images.png",
+  "datePublished": "2026-10-30",
+  "dateModified": "2026-10-30",
+  "author": {
+    "@type": "Person",
+    "name": "Ada Lovelace"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Acme",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://example.com/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://example.com/docs/responsive-images"
+  }
+}
+&lt;/script&gt;
+
+&lt;!-- Validate with Google's Rich Results Test:
+     https://search.google.com/test/rich-results --&gt;</code></pre>
+
+  <h2 id="semantic-seo">Semantic HTML is SEO</h2>
+  <ul>
+    <li>Search engines parse the same DOM a browser builds — valid, semantically meaningful HTML is parsed correctly.</li>
+    <li>Headings (<code>h1</code>–<code>h6</code>) tell crawlers what each block is about; skipped levels dilute the signal.</li>
+    <li>Descriptive link text gives crawlers context for outbound links.</li>
+    <li>Structured data (JSON-LD) unlocks rich results (star ratings, recipes, events, FAQs).</li>
+    <li>Fast, accessible pages rank better because Core Web Vitals are a ranking signal.</li>
+  </ul>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="12-accessibility.html"><span class="pn-label">Previous</span><span class="pn-title">12 · Accessibility &amp; ARIA</span></a>
+    <a class="page-next" href="14-performance.html"><span class="pn-label">Next</span><span class="pn-title">14 · Performance-Oriented HTML</span></a>
+  </nav>
+
+</div>
+</main>
+
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>

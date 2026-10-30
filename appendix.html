@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Appendix · Quick Gotchas — The Complete HTML Guide</title>
+<meta name="description" content="A symptom → cause lookup table for the bugs you will actually hit.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&lt;/&gt;</span><span class="brand-text">The Complete HTML Guide</span></a>
+  <div class="header-spacer"></div>
+  <div class="header-actions">
+    <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle dark mode"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></button>
+    <button id="toc-toggle" class="icon-btn" type="button" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Topics</span></button>
+  </div>
+</header>
+<div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progress"></div></div>
+<aside class="sidebar" id="sidebar"><p class="toc-heading">Topics</p><nav aria-label="Table of contents"><ul id="toc"></ul></nav></aside>
+<div class="overlay" id="overlay" hidden></div>
+
+<main id="main">
+<div class="content">
+
+  <p class="page-kicker">Appendix</p>
+  <h1>Quick Gotchas</h1>
+  <p class="lede">A symptom → cause lookup table for the bugs you will actually hit.</p>
+
+  <h2 id="gotchas-table">Symptom → cause</h2>
+  <div class="table-wrap">
+    <table>
+      <caption>Twelve bugs and their causes</caption>
+      <thead><tr><th scope="col">Symptom</th><th scope="col">Likely cause</th></tr></thead>
+      <tbody>
+        <tr><td>Layout collapses — everything stacks vertically</td><td>An unclosed block element (<code>div</code>, <code>p</code>, <code>section</code>) swallowed its siblings.</td></tr>
+        <tr><td>Everything after a <code>&lt;div /&gt;</code> disappears into the div</td><td>HTML does not support self-closing syntax on non-void elements. Write <code>&lt;div&gt;&lt;/div&gt;</code>.</td></tr>
+        <tr><td>Button submits the form when it shouldn't</td><td>Missing <code>type="button"</code>. The default is <code>submit</code>.</td></tr>
+        <tr><td>Form data arrives empty on the server</td><td>Missing <code>name</code> attribute on the input. Unnamed controls are never submitted.</td></tr>
+        <tr><td>File uploads don't work</td><td>Missing <code>enctype="multipart/form-data"</code> on the <code>&lt;form&gt;</code>.</td></tr>
+        <tr><td>Opened tab can navigate the opener window</td><td>Missing <code>rel="noopener"</code> on a <code>target="_blank"</code> link.</td></tr>
+        <tr><td>Layout shifts as images load</td><td>Missing <code>width</code> / <code>height</code> (or <code>aspect-ratio</code>) on the image.</td></tr>
+        <tr><td>Autofill doesn't fill anything</td><td>Missing or wrong <code>autocomplete</code> tokens, or fields not wrapped in a <code>&lt;form&gt;</code>.</td></tr>
+        <tr><td>Screen reader skips the error message</td><td>Error text is not linked via <code>aria-describedby</code> and not announced via <code>role="alert"</code> or <code>aria-live</code>.</td></tr>
+        <tr><td>Modal can't be closed with ESC or focus escapes</td><td>Custom modal instead of <code>&lt;dialog&gt;</code> + <code>showModal()</code>. Native dialog gives you ESC, focus trapping and a backdrop for free.</td></tr>
+        <tr><td>Anchor inside an anchor — the inner link does nothing</td><td>Nested <code>&lt;a&gt;</code> elements are invalid; the parser closes the outer link before opening the inner one. Never nest interactive content.</td></tr>
+        <tr><td><code>:focus</code> styles don't apply</td><td>Focus was removed with <code>outline: none</code>, or the element isn't focusable (missing <code>tabindex</code>, or it's a <code>div</code> instead of a <code>button</code>). Use <code>:focus-visible</code> and native controls.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout tip">
+    <span class="ico" aria-hidden="true">✔</span>
+    <p>
+      <strong>Bonus rule of thumb:</strong> when the browser “fixes” your markup, look at it in the DevTools Elements panel rather than your source file. The DOM shows what the parser actually built — which is what CSS, JS and assistive tech all see.
+    </p>
+  </div>
+
+  <nav class="page-nav" aria-label="Page navigation">
+    <a class="page-prev" href="16-validation.html"><span class="pn-label">Previous</span><span class="pn-title">16 · Validation, Tooling &amp; Final Checklist</span></a>
+    <a class="page-next" href="index.html"><span class="pn-label">Back to</span><span class="pn-title">Home</span></a>
+  </nav>
+
+</div>
+</main>
+<button id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+<script src="app.js" defer></script>
+</body>
+</html>
